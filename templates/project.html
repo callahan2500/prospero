@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Project Outline</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+    
+    <style>
+
+        body {
+            background-color: #faf0e6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        
+        h1, h3 {
+            margin: 0;
+        }
+
+        h1 {
+            color: #000;
+            font-size: 51px;
+            font-weight: 500;
+            text-align: center;
+            text-align: left; /* Adjusted */
+            font-family: 'Dela Gothic One', serif;
+
+        }
+
+        p, input, button {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 20px;
+
+        }
+
+        .title-container {
+            max-width: 1128px;
+            margin: 0 auto 20px auto;
+            padding: 0 20px;
+            padding-top: 36.1px;
+        }
+
+
+        h2 {
+            font-size: 35px; /* Updated font size */
+            margin: 0 0 12px 0; /* Added margin to create space between title and paragraph */
+            font-family: 'Dela Gothic One', serif;
+            font-weight: 300;
+
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 0 0 12px 0;
+            font-family: 'Deal Gothic One', sans-serif;
+        }
+
+        h4{
+            font-size: 14px;
+            margin: 0 0 10px;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 100;
+        }
+
+        .container {
+            max-width: 1128px;
+            margin: 20px auto;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            border: 2px solid #000;
+            background: #FFF;
+            box-shadow: 4px 4px 0px 0px #50D4BC; /* Adjust as needed */
+
+
+        }
+
+        .overview-container p {
+            font-family: 'League Spartan', sans-serif; /* Updated font family */
+            font-size: 20px; /* Updated font size */
+
+        }
+
+        .two-column {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Gap between columns */
+            margin-top: 75px; /* Adjusted margin top as per previous adjustments */
+            padding: 0; /* No padding for two-column, it should align with .container */
+
+        }
+
+        .column-container h2 { /* Updated font size and margin for titles inside column */
+            font-size: 35px; 
+            margin-bottom: 6px; /* Added margin below the title */
+        }
+
+        .column-container h3 { /* Added margin below the subtitle */
+            margin-bottom: 12px;
+        }
+
+        .column-container p, .column-container input { /* Updated font family and font size for paragraph and input */
+            font-family: 'League Spartan', sans-serif;
+            font-size: 20px;
+        }
+
+        .column-container p { /* Added margin below the paragraph */
+            margin-bottom: 12px;
+        }
+
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+            box-sizing: border-box;
+        }
+
+        .column-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            border-radius: 8px;
+            padding: 40px 20px;
+            position: relative;
+            box-shadow: 4px 4px 0px 0px #50D4BC; /* Adjust as needed */
+            border: 2px solid #000;
+
+
+
+        }
+
+
+        .container, .two-column {
+            width: 100%;
+            max-width: 1128px; /* Ensures that container and two-column have the same width */
+            margin: 20px auto; /* Centers the container */
+            box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+            
+        }
+        
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .help-button {
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px;
+        }
+
+        .save-button{
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px;
+            background-color: #E278D1;
+        }
+
+        .step-content {
+            margin-top: 10px;
+        }
+
+        .step-content .task-list {
+            list-style: none; /* Removes the default bullets of the list */
+            padding: 0; /* Removes the default padding of the list */
+        }
+
+        .step-content .task-item {
+            margin-bottom: 20px; /* Adds space between list items */
+        }
+
+        .step-content input[type="url"] {
+            display: flex;
+            height: 25px;
+            width: 954px;
+            padding: 0px 20px;
+            align-items: flex-start;
+            gap: 10px;
+
+            border-radius: 12px;
+            border: 1px solid #D9D9D9;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+        }
+
+        .navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 767px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+        .ai-output {
+            border: 2px solid grey; /* Set border color to grey */
+            padding: 10px; /* Add some padding inside the border */
+            margin-bottom: 20px; /* Add some space below each output */
+            border-radius: 8px; /* Optional: for rounded corners */
+        }
+    </style>
+ 
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="#home"> About</a>
+        <a href="#home">Projects</a>
+        <a href="#services">Pricing</a>
+        <a href="#contact">Blog</a>
+    </div>
+
+    <div class="title-container">
+        <h1>Design an educational chatbot</h1>
+    </div>
+
+    <div class="container overview-container">
+        <h2>Company Overview</h2>
+        <p>We are a leading company specializing in creating chatbots for virtual educational organizations, including bootcamps, online universities, and homeschooling platforms. Our mission is to enhance the educational experience through intuitive and AI-powered chatbot solutions.</p>
+    </div>
+
+    <div class="two-column columns-container">
+        <div class="column">
+            <div class="container column-container">
+                <h2>Objective</h2> <!-- Updated to h2 -->
+                <p>Design a customizable chatbot that aligns with each client's branding. This chatbot should cater to educational programs serving people of all ages. The primary goal is to facilitate efficient communication between teachers and students, with features that aid in teaching and learning.</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="container column-container">
+                <h2>Problem Statement</h2> <!-- Updated to h2 -->
+                <p>Use the information provided about the company and objective and draft a short problem statement</p>
+                <input type="text" placeholder="Write your Problem Statement here">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container step-container">
+        <h3>Step 1: Empathize</h3>
+        <h4>In this step, you will learn about the needs, challenges, and expectations of potential users. <i>If you're stuck, click the help button below!</i></h4>
+        <div class="step-content">
+            <ul class="task-list">
+                <li class="task-item">
+                    <p><b>Task 1:</b> Create a Google folder named "Educational Chatbot Project" and set up a document for interview notes. Engage with 10 representatives from educational organizations, documenting a concise summary for each interaction.</p>
+                    <input type="url" placeholder="Enter URL here">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 2:</b> Analyze your notes and draft 2-3 user personas. Use this Figma template to structure and present your personas.</p>
+                    <input type="url" placeholder="Enter URL here">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 3:</b> Create an affinity map to categorize and prioritize features. Utilize tools like Miro or FigJam for this exercise.</p>
+                    <input type="url" placeholder="Enter URL here">
+                </li>
+                <!-- Add more list items as needed -->
+            </ul>
+        </div>
+        <button class="help-button">Ask AI for Help</button>
+        <div class="help-input" style="display: none;">
+            <input type="text" class="help-text" placeholder="Type your question here">
+        </div>
+        <button class="save-button"> Save </button>
+    </div>
+
+
+
+    <!-- You can replicate the Step, Subtask and Input for more steps and subtasks -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var helpButtons = document.querySelectorAll('.help-button');
+                helpButtons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        var helpInput = document.querySelector('.help-input')
+                        helpInput.style.display = (helpInput.style.display === 'none') ? 'block' : 'none';
+                    });
+                });
+
+            var inputs = document.querySelectorAll('.help-text');
+            inputs.forEach(function (input) {
+                input.addEventListener('change', function () {
+                    var question = this.value;
+
+                    var projectBriefElement = document.querySelector('.container:nth-of-type(1) p');
+                    var objectiveElement = document.querySelector('.container:nth-of-type(2) p');
+                    var projectBrief = projectBriefElement ? projectBriefElement.textContent : '';
+                    var objective = objectiveElement ? objectiveElement.textContent : '';
+
+                    fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            question: question,
+                            projectBrief: projectBrief, // Sending only company overview
+                            objective: objective, // and objective
+                        }),
+                    })
+
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Received Data:", data);  // <-- Log the received data
+                        var answer = document.createElement('p');
+                        answer.textContent = data.answer || data.error;
+                        this.parentNode.appendChild(answer);
+                    })
+                    .catch(error => console.error(error));
+                });
+            });
+        });
+
+    </script>
+
+    
+</body>
+
+</html>

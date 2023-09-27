@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'Clash Display';
+    src: url('../font/ClashDisplay-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Clash Display';
+    src: url('../font/ClashDisplay-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Clash Display';
+    src: url('../font/ClashDisplay-Regular.otf') format('opentype');
+    font-weight: 300; /* light */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Clash Display';
+    src: url('../font/ClashDisplay-Regular.otf') format('opentype');
+    font-weight: 200; /* extra light */
+    font-style: normal;
+    font-display: swap;
+}

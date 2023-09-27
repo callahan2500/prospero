@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select a Project</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+        }
+        header {
+            background: #50b3a2;
+            color: #ffffff;
+            text-align: center;
+            padding-top: 30px;
+            min-height: 70px;
+        }
+        .main {
+            padding: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column; /* stack child elements vertically */
+        }
+        .styled-select {
+            display: flex;
+            width: 586px;
+            height: 41.493px;
+            padding: 0px 17px;
+            justify-content: center;
+            align-items: center;
+            gap: 12.75px;
+            flex-shrink: 0;
+            border-radius: 17px;
+            background: #FFF;
+            box-shadow: 0px 0px 0px 3.18748px rgba(132, 66, 211, 0.48);
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+        }
+        button {
+            padding: 10px;
+            margin-top: 20px;
+            display: block; /* change to block */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1{
+            font-family: "Dela Gothic One", 'serif';
+        }
+
+        h2{
+            font-family: "League Spartan", 'sans-serif';
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Choose a Project</h1>
+        </header>
+        <div class="main">
+            <h2>Let AI guide you through your next case study experience</h2>
+            <form action="index.html" method="get">
+                <select name="project" class="styled-select">
+                    <option value="educational_chatbot">Design an Educational Chatbot</option>
+                </select>
+                <a href="/project" class="button">Generate Project</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
