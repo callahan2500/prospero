@@ -157,7 +157,6 @@
             border-radius: 18.026px;
             border: 1.205px solid #000;
             cursor: pointer;
-            border: none;
             margin-top: 20px;
         }
 
@@ -168,9 +167,18 @@
             border-radius: 18.026px;
             border: 1.205px solid #000;
             cursor: pointer;
-            border: none;
             margin-top: 20px;
             background-color: #E278D1;
+        }
+        /*step content */
+
+        /* Initially hide all steps except the first one */
+        #step2-container,
+        #step3-container,
+        #step4-container,
+        #step5-container,
+        #step6-container {
+            display: none;
         }
 
         .step-content {
@@ -238,6 +246,60 @@
             margin-bottom: 20px; /* Add some space below each output */
             border-radius: 8px; /* Optional: for rounded corners */
         }
+
+        /* modal css*/
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            top: 0;
+            left: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black with a bit of transparency */
+            z-index: 1000; /* Sit on top */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 300px; /* Adjust to your preference */
+            height: 300px; /* Make height equal to width */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content img {
+            width: 100px; /* Or whatever size you want */
+            height: auto; /* Maintain aspect ratio */
+            margin: 20px 0;
+        }
+
+        #nextBtn {
+            padding: 10px 20px;
+            width: 190px;
+            color: #000;
+            border: 2.475px solid #000;
+            border-radius: 37.019px;
+            background: var(--base-white, #FFF);
+            cursor: pointer;
+        }
+
+        #nextBtn:hover {
+            background-color: #45a049;
+        }
+
+
     </style>
  
 </head>
@@ -252,23 +314,24 @@
 
     <div class="title-container">
         <h1>Design an educational chatbot</h1>
+        <p> To get started, read sections 1-3. Then briefly write a problem statement and then begin Step 1. </p>
     </div>
 
     <div class="container overview-container">
-        <h2>Company Overview</h2>
+        <h2>1. Company Overview</h2>
         <p>We are a leading company specializing in creating chatbots for virtual educational organizations, including bootcamps, online universities, and homeschooling platforms. Our mission is to enhance the educational experience through intuitive and AI-powered chatbot solutions.</p>
     </div>
 
     <div class="two-column columns-container">
         <div class="column">
             <div class="container column-container">
-                <h2>Objective</h2> <!-- Updated to h2 -->
+                <h2>2. Objective</h2> <!-- Updated to h2 -->
                 <p>Design a customizable chatbot that aligns with each client's branding. This chatbot should cater to educational programs serving people of all ages. The primary goal is to facilitate efficient communication between teachers and students, with features that aid in teaching and learning.</p>
             </div>
         </div>
         <div class="column">
             <div class="container column-container">
-                <h2>Problem Statement</h2> <!-- Updated to h2 -->
+                <h2>3. Problem Statement</h2> <!-- Updated to h2 -->
                 <p>Use the information provided about the company and objective and draft a short problem statement</p>
                 <input type="text" placeholder="Write your Problem Statement here">
             </div>
@@ -276,22 +339,22 @@
 
     </div>
 
-    <div class="container step-container">
+    <div class="container step-container" id="step1-container">
         <h3>Step 1: Empathize</h3>
         <h4>In this step, you will learn about the needs, challenges, and expectations of potential users. <i>If you're stuck, click the help button below!</i></h4>
         <div class="step-content">
             <ul class="task-list">
                 <li class="task-item">
                     <p><b>Task 1:</b> Create a Google folder named "Educational Chatbot Project" and set up a document for interview notes. Engage with 10 representatives from educational organizations, documenting a concise summary for each interaction.</p>
-                    <input type="url" placeholder="Enter URL here">
+                    <input type="url" placeholder="Paste a link to your interview notes here.">
                 </li>
                 <li class="task-item">
                     <p><b>Task 2:</b> Analyze your notes and draft 2-3 user personas. Use this Figma template to structure and present your personas.</p>
-                    <input type="url" placeholder="Enter URL here">
+                    <input type="url" placeholder="Paste a link to your personas here.">
                 </li>
                 <li class="task-item">
                     <p><b>Task 3:</b> Create an affinity map to categorize and prioritize features. Utilize tools like Miro or FigJam for this exercise.</p>
-                    <input type="url" placeholder="Enter URL here">
+                    <input type="url" placeholder="Paste a link to your affinity map here.">
                 </li>
                 <!-- Add more list items as needed -->
             </ul>
@@ -300,29 +363,127 @@
         <div class="help-input" style="display: none;">
             <input type="text" class="help-text" placeholder="Type your question here">
         </div>
-        <button class="save-button"> Save </button>
+        <button class="save-button"> Next Step </button>
     </div>
 
+    <div class="container step-container" id="step2-container">
+        <h3>Step 2: Define</h3>
+        <h4>Now you will articulate the specific problems and needs the chatbot should address based on your insights from Step 1. <i>If you're stuck, click the help button below!</i></h4>
+        <div class="step-content">
+            <ul class="task-list">
+                <li class="task-item">
+                    <p><b>Task 1:</b> Using the provided template, list down the primary challenges and needs identified from the interviews.</p>
+                    <input type="url" placeholder="Paste a link to your list here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 2:</b> Use the provided template to conduct competitive research on existing educational chatbots.</p>
+                    <input type="url" placeholder="Paste a link to your analysis here.">
+                </li>
+                <!-- Add more list items as needed -->
+            </ul>
+        </div>
+        <button class="help-button">Ask AI for Help</button>
+        <div class="help-input" style="display: none;">
+            <input type="text" class="help-text" placeholder="Type your question here">
+        </div>
+        <button class="save-button"> Next Step </button>
+        <button class="back-button">Back</button>
 
+    </div>
 
+    <div class="container step-container" id="step3-container">
+        <h3>Step 3: Ideate</h3>
+        <h4>Using the previous two steps, brainstorm potential solutions and design directions for the chatbot. <i>If you're stuck, click the help button below!</i></h4>
+        <div class="step-content">
+            <ul class="task-list">
+                <li class="task-item">
+                    <p><b>Task 1:</b> Create a document named "Chatbot Feature Brainstorm" and list all feature ideas and functionalities, based on the insights gathered and the problems identified.</p>
+                    <input type="url" placeholder="Paste a link to your list here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 2:</b> Based on the brainstorming session, sketch out user flows for the primary chatbot features. Use this Figma template to visualize the user journeys.</p>
+                    <input type="url" placeholder="Paste a link to your sketches here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 3:</b>Create low and mid-fidelity wireframes for the chatbot interface using Figma.</p>
+                    <input type="url" placeholder="Paste a link to your Figma here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 4:</b>Refine the mid-fidelity wireframes and develop them into high-fidelity wireframes, incorporating detailed UI elements, color schemes, and typography.</p>
+                    <input type="url" placeholder="Paste a link to your Figma here.">
+                </li>
+                <!-- Add more list items as needed -->
+            </ul>
+        </div>
+        <button class="help-button">Ask AI for Help</button>
+        <div class="help-input" style="display: none;">
+            <input type="text" class="help-text" placeholder="Type your question here">
+        </div>
+        <button class="save-button"> Next Step </button>
+        <button class="back-button">Back</button>
+
+    </div>
+
+    <div class="container step-container" id="step4-container">
+        <h3>Step 4: Prototype</h3>
+        <h4> Now you will develop a high fidelity version to test with potential users! <i>If you're stuck, click the help button below!</i></h4>
+        <div class="step-content">
+            <ul class="task-list">
+                <li class="task-item">
+                    <p><b>Task 1:</b> Organize user testing sessions with at least 5 participants from educational organizations. Document their feedback in a dedicated Google document.</p>
+                    <input type="url" placeholder="Paste a link to your notes here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 2:</b> Analyze the feedback and compile a list of design changes and improvements.</p>
+                    <input type="url" placeholder="Paste a link to your analysis here.">
+                </li>
+                <li class="task-item">
+                    <p><b>Task 3:</b>Update the Figma prototype with the necessary changes. Once finalized, prepare the chatbot design for handoff to the development team.</p>
+                    <input type="url" placeholder="Paste a link to your Figma here.">
+                </li>
+                <!-- Add more list items as needed -->
+            </ul>
+        </div>
+        <button class="help-button">Ask AI for Help</button>
+        <div class="help-input" style="display: none;">
+            <input type="text" class="help-text" placeholder="Type your question here">
+        </div>
+        <button class="save-button"> Next Step </button>
+        <button class="back-button">Back</button>
+
+    </div>
+
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalText">Nice work!</h3>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+    
     <!-- You can replicate the Step, Subtask and Input for more steps and subtasks -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            let currentStep = 1;
 
+            let modal = document.getElementById('confirmationModal');
+            let modalText = document.getElementById('modalText');
+            let nextBtn = document.getElementById('nextBtn');
+
+
+            // Assign event listeners for help-buttons and help-text
             var helpButtons = document.querySelectorAll('.help-button');
-                helpButtons.forEach(function (button) {
-                    button.addEventListener('click', function () {
-                        var helpInput = document.querySelector('.help-input')
-                        helpInput.style.display = (helpInput.style.display === 'none') ? 'block' : 'none';
-                    });
+            helpButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var helpInput = this.nextElementSibling; // Gets the next sibling element of the button, i.e., .help-input
+                    helpInput.style.display = (helpInput.style.display === 'none') ? 'block' : 'none';
                 });
+            });
 
             var inputs = document.querySelectorAll('.help-text');
             inputs.forEach(function (input) {
                 input.addEventListener('change', function () {
                     var question = this.value;
-
                     var projectBriefElement = document.querySelector('.container:nth-of-type(1) p');
                     var objectiveElement = document.querySelector('.container:nth-of-type(2) p');
                     var projectBrief = projectBriefElement ? projectBriefElement.textContent : '';
@@ -335,22 +496,65 @@
                         },
                         body: JSON.stringify({
                             question: question,
-                            projectBrief: projectBrief, // Sending only company overview
-                            objective: objective, // and objective
+                            projectBrief: projectBrief,
+                            objective: objective,
                         }),
                     })
-
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Received Data:", data);  // <-- Log the received data
-                        var answer = document.createElement('p');
-                        answer.textContent = data.answer || data.error;
-                        this.parentNode.appendChild(answer);
-                    })
-                    .catch(error => console.error(error));
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Received Data:", data);
+                            var answer = document.createElement('p');
+                            answer.textContent = data.answer || data.error;
+                            this.parentNode.appendChild(answer);
+                        })
+                        .catch(error => console.error(error));
                 });
             });
+
+                for (let i = 1; i <= 6; i++) {
+                const stepContainer = document.querySelector(`#step${i}-container`);
+                if (stepContainer) {
+                    stepContainer.querySelector('.save-button').addEventListener('click', function () {
+                        let allFilled = true;
+                        stepContainer.querySelectorAll('input[type="url"]').forEach(input => {
+                            if (!input.value.trim()) allFilled = false;
+                        });
+
+                        if (allFilled) {
+                            let nextStep = currentStep + 1;
+                            modalText.textContent = `You just completed Step ${currentStep}. Now we're going to do ${nextStep}.`;
+                            modal.style.display = 'block'; // You can use 'flex' or 'block' depending on your styling preference
+                        } else {
+                            alert("Please fill all the fields before proceeding.");
+                        }
+                    });
+                }
+            }
+
+            for (let i = 2; i <= 6; i++) {
+                const backButton = document.querySelector(`#step${i}-container .back-button`);
+                if (backButton) {
+                    backButton.addEventListener('click', function () {
+                        document.querySelector(`#step${i}-container`).style.display = 'none';
+                        currentStep--;
+                        document.querySelector(`#step${currentStep}-container`).style.display = 'block';
+                    });
+                }
+            }
+
+            // When the user clicks 'Next' button
+            nextBtn.addEventListener('click', function () {
+                modal.style.display = 'none'; // Hide the modal
+                let stepContainer = document.querySelector(`#step${currentStep}-container`);
+                stepContainer.style.display = 'none';
+                currentStep++;
+                document.querySelector(`#step${currentStep}-container`).style.display = 'block';
+            });
+
+
+
         });
+
 
     </script>
 
