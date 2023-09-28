@@ -524,9 +524,34 @@
             var inputs = document.querySelectorAll('.help-text');
             inputs.forEach(function (input) {
                 input.addEventListener('change', function () {
-                    // ... existing logic ...
+                    var question = this.value;
+                    var projectBriefElement = document.querySelector('.container:nth-of-type(1) p');
+                    var objectiveElement = document.querySelector('.container:nth-of-type(2) p');
+                    var projectBrief = projectBriefElement ? projectBriefElement.textContent : '';
+                    var objective = objectiveElement ? objectiveElement.textContent : '';
+
+                    fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            question: question,
+                            projectBrief: projectBrief,
+                            objective: objective,
+                        }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Received Data:", data);
+                            var answer = document.createElement('p');
+                            answer.textContent = data.answer || data.error;
+                            this.parentNode.appendChild(answer);
+                        })
+                        .catch(error => console.error(error));
                 });
             });
+
 
             // Event Listener for save-button (for steps 1 to 3)
             for (let i = 1; i <= 3; i++) {
