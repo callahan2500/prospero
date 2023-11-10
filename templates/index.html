@@ -2,102 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Select a Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
-    
+
+
+    <title>Sprintfolio</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #FFF;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            width: 50%;
-        }
-        header {
-            color: #000;
+            background-image: url('https://prospero0.s3.us-east-2.amazonaws.com/website/sprintfolio_background_1x.webp') ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-color: #FFFAF4;
+            font-family: Arial, sans-serif;
+            padding: 30px;
             text-align: center;
-            padding-top: 30px;
-            padding-bottom: 15px; /* Adjusted padding */
-            min-height: 70px;
-        }
-        .main {
-            padding: 30px 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
-        .styled-select {
-            width: 586px;
-            height: 41.493px;
-            padding: 0px 17px;
-            border-radius: 17px;
+
+        input[type="email"], 
+        input[type="password"] {
+            display: flex;
+            width: 456px;
+            height: 63px;
+            padding: 0px 20px;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            border: 1px solid rgba(138, 138, 138, 0.52);
             background: #FFF;
-            box-shadow: 0px 0px 0px 3.18748px rgba(132, 66, 211, 0.48);
-            appearance: none;
-            cursor: pointer;
+            margin: 10px auto; /* Centering and adding some vertical spacing */
         }
-        .button {
-            display: inline-block;
-            background-color: #50b3a2;
-            color: #ffffff;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin: 20px auto 0 auto; /* Adjusted margin */
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .button:hover {
-            background-color: #4d9a91;
-        }
-        h1{
-            font-family: "Dela Gothic One", 'serif';
-            font-size: 40px;
-            margin-bottom: 15px; /* Adjusted margin */
-        }
-        h2{
-            font-family: "League Spartan", 'sans-serif';
-            margin-top: 0px;
-            font-weight: 100;
-        }
+
         form {
-            text-align: center; /* Centering the button */
+            margin-top: 20px;
         }
+
+        h1{
+            font-family: 'Dela Gothic One', serif;
+            font-size: 72px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120.5%;
+            margin-bottom: 10px;
+        }
+
+        h3{
+            margin-top: 10px;
+            color: #20263B;
+            text-align: center;
+            font-family: 'Dela Gothic One', serif;
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 117.8%; /* 37.696px */
+
+        }
+
+        .btn{
+            display: inline-flex;
+            padding: 6.009px 12.017px;
+            justify-content: center;
+            align-items: center;
+            gap: 6.009px;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            background: #E278D1;
+            box-shadow: 0px -0.75107px 0px 0px rgba(47, 43, 67, 0.10) inset, 0px 0.75107px 2.25322px 0px rgba(47, 43, 67, 0.10);
+        }
+
+        .navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 767px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="container">
-            <header>
-                <h1>Choose a UX Project</h1>
-            </header>
-            <div class="main">
-                <h2>Let AI guide you through your next case study experience</h2>
-                <form action="index.html" method="get">
-                    <select name="project" class="styled-select">
-                        <option value="educational_chatbot">Design an Educational Chatbot</option>
-                    </select>
-                    <a href="/project" class="button">Generate Project</a>
-                </form>
-            </div>
-        </div>
+    <div class="navbar">
+        <a href="#home"> About</a>
+        <a href="/projects">Projects</a>
+        <a href="#tutorial">Tutorial</a>
+    </div>
+
+    <h1>school for designers</h1>
+    <h3>100% free, tailored, and hands-on learning for every designer out there</h3>
+    <div class="container">
+        <form action="/" method="post">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+           
+            <button class="btn" type="submit">Login</button>
+        
+        </form>
+        <p>Don't have an account? <a href="/signup">Signup</a></p>
+  
     </div>
 </body>
 </html>
+
+
+
+
+

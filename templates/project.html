@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Project Outline</title>
+    <title>Prospero | {{ project_template.title }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
     
@@ -78,6 +78,10 @@
 
         }
 
+        .step-container{
+            position: relative;
+        }
+
         .overview-container p {
             font-family: 'League Spartan', sans-serif; /* Updated font family */
             font-size: 20px; /* Updated font size */
@@ -133,6 +137,21 @@
 
         }
 
+        .column-container textarea {
+            display: flex;
+            width: 100%; /* Adjust width as per your requirement */
+            padding: 10px 20px;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 40px; /* Adjust minimum height as per your requirement */
+            resize: vertical; /* Allow user to resize the textarea vertically only */
+            border-radius: 12px;
+            border: 1px solid #D9D9D9;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            font-family: 'League Spartan', sans-serif; /* Use the same font family as the rest of the page */
+            font-size: 14px;
+        }
+
 
         .container, .two-column {
             width: 100%;
@@ -150,7 +169,7 @@
             box-sizing: border-box;
         }
 
-        .help-button {
+        .help-button, .only-save-button {
             padding: 6.09px 12.017px;
             justify-content: center;
             align-items: center;
@@ -175,9 +194,10 @@
             padding: 6.09px 12.017px;
             justify-content: center;
             align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
             cursor: pointer;
             margin-top: 20px;
-            color: #000;
 
         }
 
@@ -192,6 +212,37 @@
             margin-top: 20px;
             background-color: #E278D1;
 
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between; /* This separates the buttons */
+        }
+
+        .button-group-left,
+        .button-group-right{
+            display: flex;
+            gap:10px;
+        }
+
+        .help-section{
+            margin-top: 10px;
+        }
+        .button-group .help-button,
+        .button-group .only-save-button {
+            margin-right: 10px; /* Add some spacing between these two buttons */
+        }
+
+        .button-group-left, .button-group-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .next-button, .submit-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
         /*step content */
 
@@ -217,18 +268,57 @@
             margin-bottom: 20px; /* Adds space between list items */
         }
 
-        .step-content input[type="url"] {
+        .step-content textarea {
             display: flex;
-            height: 25px;
-            width: 954px;
-            padding: 0px 20px;
+            width: 100%; /* Adjust width as per your requirement */
+            padding: 10px 20px;
             align-items: flex-start;
             gap: 10px;
-
+            min-height: 100px; /* Adjust minimum height as per your requirement */
+            resize: vertical; /* Allow user to resize the textarea vertically only */
             border-radius: 12px;
             border: 1px solid #D9D9D9;
             box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            font-family: 'League Spartan', sans-serif; /* Use the same font family as the rest of the page */
+            font-size: 14px;
         }
+
+
+
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+
+        }
+
+        .file-upload-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+            cursor: pointer;
+            background-color: #f5f5f5; /* Light gray background */
+            font-family: "League Spartan", sans-serif;
+        }
+
+        .file-upload-container:hover {
+            background-color: #eaeaea; /* Slightly darker gray on hover */
+        }
+
+        .upload-icon {
+            margin-right: 10px;
+            margin-left: 5px;
+        }
+
+        .file-name {
+            flex-grow: 1; /* Allows the text to take up the remaining width */
+            color: #777;  /* Slightly darker text */
+        }
+
 
         .navbar {
             display: flex;
@@ -263,12 +353,28 @@
             }
         }
 
-        .ai-output {
-            border: 2px solid grey; /* Set border color to grey */
-            padding: 10px; /* Add some padding inside the border */
-            margin-bottom: 20px; /* Add some space below each output */
-            border-radius: 8px; /* Optional: for rounded corners */
+
+
+        .help-section {
+            margin-top: 20px;
         }
+
+        .help-text {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        .ai-response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+        }
+
 
         /* modal css*/
         .modal {
@@ -332,151 +438,102 @@
 <body>
     <div class="navbar">
         <a href="#home"> About</a>
-        <a href="#home">Projects</a>
-        <a href="#services">Pricing</a>
-        <a href="#contact">Blog</a>
+        <a href="/projects">Projects</a>
+        <a href="/tutorial">Tutorial</a>
+        <a href="/logout">Logout</a>
     </div>
 
     <div class="title-container">
-        <h1>Design an educational chatbot</h1>
+        <h1>{{ project_template.title }}</h1>
         <p> To get started, read sections 1-3. Then briefly write a problem statement and then begin Step 1. </p>
     </div>
 
     <div class="container overview-container">
         <h2>1. Company Overview</h2>
-        <p>We are a leading company specializing in creating chatbots for virtual educational organizations, including bootcamps, online universities, and homeschooling platforms. Our mission is to enhance the educational experience through intuitive and AI-powered chatbot solutions.</p>
+        <p>{{ project_template.companyOverview}}</p>
     </div>
-
+    
     <div class="two-column columns-container">
         <div class="column">
             <div class="container column-container">
                 <h2>2. Objective</h2> <!-- Updated to h2 -->
-                <p>Design a customizable chatbot that aligns with each client's branding. This chatbot should cater to educational programs serving people of all ages. The primary goal is to facilitate efficient communication between teachers and students, with features that aid in teaching and learning.</p>
+                <p>{{ project_template.objective }}</p>
             </div>
         </div>
         <div class="column">
             <div class="container column-container">
                 <h2>3. Problem Statement</h2> <!-- Updated to h2 -->
                 <p>Use the information provided about the company and objective and draft a short problem statement</p>
-                <input type="text" placeholder="Write your Problem Statement here">
+                {% if user_problem_statement %}
+                    <textarea id="problem-statement-input" placeholder="Write your Problem Statement here">{{ user_problem_statement }}</textarea>
+                {% else %}
+                    <textarea id="problem-statement-input" placeholder="Write your Problem Statement here"></textarea>
+                {% endif %}
             </div>
         </div>
-
     </div>
+    
 
-    <div class="container step-container" id="step1-container">
-        <h3>Step 1: Empathize</h3>
-        <h4>In this step, you will learn about the needs, challenges, and expectations of potential users. <i>If you're stuck, click the help button below!</i></h4>
-        <div class="step-content">
-            <ul class="task-list">
-                <li class="task-item">
-                    <p><b>Task 1:</b> Create a Google folder named "Educational Chatbot Project" and set up a document for interview notes. Engage with 10 representatives from educational organizations, documenting a concise summary for each interaction.</p>
-                    <input type="url" placeholder="Paste a link to your interview notes here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 2:</b> Analyze your notes and draft 2-3 user personas. Use this Figma template to structure and present your personas.</p>
-                    <input type="url" placeholder="Paste a link to your personas here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 3:</b> Create an affinity map to categorize and prioritize features. Utilize tools like Miro or FigJam for this exercise.</p>
-                    <input type="url" placeholder="Paste a link to your affinity map here.">
-                </li>
-                <!-- Add more list items as needed -->
-            </ul>
-        </div>
-        <button class="help-button">Ask AI for Help</button>
-        <div class="help-input" style="display: none;">
-            <input type="text" class="help-text" placeholder="Type your question here">
-        </div>
-        <button class="save-button"> Next Step </button>
-    </div>
 
-    <div class="container step-container" id="step2-container">
-        <h3>Step 2: Define</h3>
-        <h4>Now you will articulate the specific problems and needs the chatbot should address based on your insights from Step 1. <i>If you're stuck, click the help button below!</i></h4>
-        <div class="step-content">
-            <ul class="task-list">
-                <li class="task-item">
-                    <p><b>Task 1:</b> Using the provided template, list down the primary challenges and needs identified from the interviews.</p>
-                    <input type="url" placeholder="Paste a link to your list here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 2:</b> Use the provided template to conduct competitive research on existing educational chatbots.</p>
-                    <input type="url" placeholder="Paste a link to your analysis here.">
-                </li>
-                <!-- Add more list items as needed -->
-            </ul>
+    <form id="taskForm">
+        <input type="hidden" id="project-id" value="{{ project_id }}">
+    
+        {% for step in project_template.steps %}
+        <div class="container step-container" id="step{{ loop.index }}-container">
+            <h3>Step {{ loop.index }}: {{ step.title }}</h3>
+            <h4>{{ step.description }}</h4>
+            <div class="step-content">
+                <ul class="task-list">
+                    {% for task in step.tasks %}
+                    <li class="task-item" data-task-id="{{ task.id }}" data-inputType="{{ task.input_type }}">
+                        <p><b>Task {{ loop.index }}:</b> {{ task.description }}</p>
+                        {% if task.input_type == "file" %}
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="taskFile{{ task.id }}" id="taskFile{{ task.id }}" accept=".png,.jpg,.jpeg,.svg,.pdf" style="display:none;">
+                            <label for="taskFile{{ task.id }}" class="file-upload-container">
+                                <span class="upload-icon">📤</span>
+                                <span class="file-name">Click to upload (accepted: .png, .jpg, .jpeg, .svg, .pdf)</span>
+                            </label>
+                        </div>
+                        {% else %}
+                        <textarea name="taskInput{{ task.id }}" placeholder="Paste a link for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+    
+            <div class="button-group">
+                <div class="button-group-left">
+                    <button type="button" class="help-button">Ask AI for Help</button>
+                    <button type="button" class="only-save-button">Save</button>
+                </div>
+    
+                <div class="button-group-right">
+                    {% if not loop.first %}
+                    <button type="button" class="back-button">Back</button>
+                    {% endif %}
+    
+                    {% if loop.last %}
+                    <button type="button" class="submit-button">Submit</button>
+                    {% else %}
+                    <button type="button" class="save-button">Next Step</button>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="help-section" style="display: none;">
+                <textarea class="help-text" placeholder="Type your question here"></textarea>
+                <div class="ai-response"></div>
+            </div>
         </div>
-        <button class="help-button">Ask AI for Help</button>
-        <div class="help-input" style="display: none;">
-            <input type="text" class="help-text" placeholder="Type your question here">
-        </div>
-        <button class="save-button"> Next Step </button>
-        <button class="back-button">Back</button>
+        {% endfor %}
+    </form>
+    
+    
 
-    </div>
 
-    <div class="container step-container" id="step3-container">
-        <h3>Step 3: Ideate</h3>
-        <h4>Using the previous two steps, brainstorm potential solutions and design directions for the chatbot. <i>If you're stuck, click the help button below!</i></h4>
-        <div class="step-content">
-            <ul class="task-list">
-                <li class="task-item">
-                    <p><b>Task 1:</b> Create a document named "Chatbot Feature Brainstorm" and list all feature ideas and functionalities, based on the insights gathered and the problems identified.</p>
-                    <input type="url" placeholder="Paste a link to your list here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 2:</b> Based on the brainstorming session, sketch out user flows for the primary chatbot features. Use this Figma template to visualize the user journeys.</p>
-                    <input type="url" placeholder="Paste a link to your sketches here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 3:</b>Create low and mid-fidelity wireframes for the chatbot interface using Figma.</p>
-                    <input type="url" placeholder="Paste a link to your Figma here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 4:</b>Refine the mid-fidelity wireframes and develop them into high-fidelity wireframes, incorporating detailed UI elements, color schemes, and typography.</p>
-                    <input type="url" placeholder="Paste a link to your Figma here.">
-                </li>
-                <!-- Add more list items as needed -->
-            </ul>
-        </div>
-        <button class="help-button">Ask AI for Help</button>
-        <div class="help-input" style="display: none;">
-            <input type="text" class="help-text" placeholder="Type your question here">
-        </div>
-        <button class="save-button"> Next Step </button>
-        <button class="back-button">Back</button>
 
-    </div>
-
-    <div class="container step-container" id="step4-container">
-        <h3>Step 4: Prototype</h3>
-        <h4> Now you will develop a high fidelity version to test with potential users! <i>If you're stuck, click the help button below!</i></h4>
-        <div class="step-content">
-            <ul class="task-list">
-                <li class="task-item">
-                    <p><b>Task 1:</b> Organize user testing sessions with at least 5 participants from educational organizations. Document their feedback in a dedicated Google document.</p>
-                    <input type="url" placeholder="Paste a link to your notes here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 2:</b> Analyze the feedback and compile a list of design changes and improvements.</p>
-                    <input type="url" placeholder="Paste a link to your analysis here.">
-                </li>
-                <li class="task-item">
-                    <p><b>Task 3:</b>Update the Figma prototype with the necessary changes. Once finalized, prepare the chatbot design for handoff to the development team.</p>
-                    <input type="url" placeholder="Paste a link to your Figma here.">
-                </li>
-                <!-- Add more list items as needed -->
-            </ul>
-        </div>
-        <button class="help-button">Ask AI for Help</button>
-        <div class="help-input" style="display: none;">
-            <input type="text" class="help-text" placeholder="Type your question here">
-        </div>
-        <button class="submit-button"> Submit </button>
-        <button class="back-button">Back</button>
-
-    </div>
 
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
@@ -495,128 +552,16 @@
                 <p>Congrats, you did it!</p>
             </div>
             <div class="modal-footer">
-                <button onclick="window.location.href='/result'">See your case study</button>
+                <button>
+                    <a href="{{ url_for('case_study', project_id=user_project.id) }}">View Results</a>
+                </button>
             </div>
         </div>
     </div>
     
     
-    <!-- You can replicate the Step, Subtask and Input for more steps and subtasks -->
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let currentStep = 1;
-
-            let modal = document.getElementById('confirmationModal');
-            let finalModal = document.getElementById('finalModal');
-            let modalText = document.getElementById('modalText');
-            let nextBtn = document.getElementById('nextBtn');
-
-            // Assign event listeners for help-buttons and help-text
-            var helpButtons = document.querySelectorAll('.help-button');
-            helpButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    var helpInput = this.nextElementSibling;
-                    helpInput.style.display = (helpInput.style.display === 'none') ? 'block' : 'none';
-                });
-            });
-
-            var inputs = document.querySelectorAll('.help-text');
-            inputs.forEach(function (input) {
-                input.addEventListener('change', function () {
-                    var question = this.value;
-                    var projectBriefElement = document.querySelector('.container:nth-of-type(1) p');
-                    var objectiveElement = document.querySelector('.container:nth-of-type(2) p');
-                    var projectBrief = projectBriefElement ? projectBriefElement.textContent : '';
-                    var objective = objectiveElement ? objectiveElement.textContent : '';
-
-                    fetch('/ask', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            question: question,
-                            projectBrief: projectBrief,
-                            objective: objective,
-                        }),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("Received Data:", data);
-                            var answer = document.createElement('p');
-                            answer.textContent = data.answer || data.error;
-                            this.parentNode.appendChild(answer);
-                        })
-                        .catch(error => console.error(error));
-                });
-            });
-
-
-            // Event Listener for save-button (for steps 1 to 3)
-            for (let i = 1; i <= 3; i++) {
-                const stepContainer = document.querySelector(`#step${i}-container`);
-                if (stepContainer) {
-                    stepContainer.querySelector('.save-button').addEventListener('click', function () {
-                        let allFilled = true;
-                        stepContainer.querySelectorAll('input[type="url"]').forEach(input => {
-                            if (!input.value.trim()) allFilled = false;
-                        });
-
-                        if (allFilled) {
-                            let nextStep = currentStep + 1;
-                            modalText.textContent = `You just completed Step ${currentStep}. Now we're going to do ${nextStep}.`;
-                            modal.style.display = 'block';
-                        } else {
-                            alert("Please fill all the fields before proceeding.");
-                        }
-                    });
-                }
-            }
-
-            // Event Listener for submit-button (for step 4)
-            const stepContainer = document.querySelector('#step4-container');
-            if (stepContainer) {
-                const submitButton = stepContainer.querySelector('.submit-button');
-                submitButton.addEventListener('click', function () {
-                    let allFilled = true;
-                    stepContainer.querySelectorAll('input[type="url"]').forEach(input => {
-                        if (!input.value.trim()) allFilled = false;
-                    });
-
-                    if (allFilled) {
-                        finalModal.style.display = 'block';
-                    } else {
-                        alert("Please fill all the fields before proceeding.");
-                    }
-                });
-            }
-
-            // Back Button Logic
-            for (let i = 2; i <= 6; i++) {
-                const backButton = document.querySelector(`#step${i}-container .back-button`);
-                if (backButton) {
-                    backButton.addEventListener('click', function () {
-                        document.querySelector(`#step${i}-container`).style.display = 'none';
-                        currentStep--;
-                        document.querySelector(`#step${currentStep}-container`).style.display = 'block';
-                    });
-                }
-            }
-
-            // Next Button Logic
-            nextBtn.addEventListener('click', function () {
-                modal.style.display = 'none';
-                let stepContainer = document.querySelector(`#step${currentStep}-container`);
-                stepContainer.style.display = 'none';
-                currentStep++;
-                document.querySelector(`#step${currentStep}-container`).style.display = 'block';
-            });
-        });
-
-
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.0/dist/purify.min.js"></script>
+    <script src="/static/js/project.js"></script>
     
 </body>
 
