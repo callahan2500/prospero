@@ -5,17 +5,19 @@ from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla import ModelView
-
 import openai
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-
 import boto3
 from botocore.exceptions import NoCredentialsError
 import uuid
+import markdown.extensions.fenced_code
+from markdown import markdown
 
 
-#initialize/config
+#INITIALIZATIONS
+
+#Flask & Postgres Configurations
 app = Flask(__name__)
 app.secret_key = os.environ.get("secret_key", "secret_default_key")
 database_uri = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://",1)
@@ -23,21 +25,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-#initialize/config S3
+#S3 Configurations
 app.config['S3_BUCKET'] = os.environ.get('S3_BUCKET')
 app.config['S3_KEY'] = os.environ.get('S3_KEY')
 app.config['S3_SECRET'] = os.environ.get('S3_SECRET')
 app.config['S3_REGION'] = os.environ.get('S3_REGION')
 
-#login management
+#Login Management
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'index'
 
 
-# OpenAI API Key
+#OpenAI API Key
 openai.api_key = os.environ.get("OPENAI_KEY")
 
+#S3 Client Connection
 s3 = boto3.client(
    "s3",
    aws_access_key_id=app.config["S3_KEY"],
@@ -45,7 +48,7 @@ s3 = boto3.client(
    region_name=app.config["S3_REGION"]
 )
 
-# Database model
+#DATABASE MODELS
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -100,7 +103,6 @@ class UserView(ModelView):
 
 
 class ProjectTemplateView(ModelView):
-    # If you have other configurations, keep them and just add the following line:
     column_display_pk = True  # Display primary key in the list view
 
 class StepTemplateView(ModelView):
@@ -132,13 +134,14 @@ def init_cms(app):
 
 init_cms(app)
 
+#KEY PAGES
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
-    # Handle signup logic here
+    # Handle signup logic
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('first_name')
@@ -186,7 +189,7 @@ def projects():
     return render_template("projects.html", projects=all_projects)
 
 
-#This function calls OpenAI API to generate an answer for the user's question
+#OPEN_AI API ROUTES
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.json
@@ -244,7 +247,6 @@ def ask():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-#This function calls OpenaI GPT to generate a summary of text. 
 def summarize_text(text):
     prompt = f"Concisely summarize the following into 2-3 sentences: {text}"
     response = openai.ChatCompletion.create(
@@ -351,6 +353,7 @@ def submit_tasks():
         print(f"Error while updating/creating tasks: {e}")
         return jsonify(success=False, error="Database error: " + str(e)), 500
 
+#DATABASE & CASE STUDY ROUTES
 def generate_presigned_url(bucket_name, object_name, expiration=3600):
     """
     Generate a pre-signed URL to share an S3 object
@@ -429,6 +432,12 @@ def case_study(project_id):
     # Render the case study page with the project and task data
     return render_template('case_study.html', user_project=user_project, tasks_by_endpoint=tasks_by_endpoint, project_template=project_template)
 
+@app.template_filter('markdown')
+def markdown_to_html(text):
+    return markdown(text, extensions=['fenced_code', 'tables'])
+
+#This adds a filter to enable markdown. 
+app.jinja_env.filters['markdown'] = markdown_to_html
 
 #This function loads projects into the dropdown on /project
 @app.route("/load_project", methods=['POST'])
@@ -462,7 +471,6 @@ def project(project_template_id):
 
     user_problem_statement = user_project.problem_statement if user_project else None
     return render_template("project.html", project_template=project_template, user_tasks=user_tasks, project_id=project_template_id, user_problem_statement=user_problem_statement, user_project=user_project)
-
 
 
 if __name__ == "__main__":

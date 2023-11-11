@@ -450,14 +450,14 @@
 
     <div class="container overview-container">
         <h2>1. Company Overview</h2>
-        <p>{{ project_template.companyOverview}}</p>
+        <p>{{ project_template.companyOverview|markdown|safe}}</p>
     </div>
     
     <div class="two-column columns-container">
         <div class="column">
             <div class="container column-container">
                 <h2>2. Objective</h2> <!-- Updated to h2 -->
-                <p>{{ project_template.objective }}</p>
+                <p>{{ project_template.objective|markdown|safe }}</p>
             </div>
         </div>
         <div class="column">
@@ -481,12 +481,12 @@
         {% for step in project_template.steps %}
         <div class="container step-container" id="step{{ loop.index }}-container">
             <h3>Step {{ loop.index }}: {{ step.title }}</h3>
-            <h4>{{ step.description }}</h4>
+            <h4>{{ step.description|markdown|safe }}</h4>
             <div class="step-content">
                 <ul class="task-list">
                     {% for task in step.tasks %}
                     <li class="task-item" data-task-id="{{ task.id }}" data-inputType="{{ task.input_type }}">
-                        <p><b>Task {{ loop.index }}:</b> {{ task.description }}</p>
+                        <p><b>Task {{ loop.index }}:</b> {{ task.description|markdown|safe }}</p>
                         {% if task.input_type == "file" %}
                         <div class="file-upload-wrapper">
                             <input type="file" name="taskFile{{ task.id }}" id="taskFile{{ task.id }}" accept=".png,.jpg,.jpeg,.svg,.pdf" style="display:none;">
