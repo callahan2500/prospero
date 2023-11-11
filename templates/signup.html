@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+
+
+    <title>Prospero | Create an Account</title>
+    <style>
+        body {
+            background-image: url('https://prospero0.s3.us-east-2.amazonaws.com/website/sprintfolio_background_1x.webp') ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-color: #FFFAF4;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        input[type="email"], 
+        input[type="password"] {
+            display: flex;
+            width: 400px;
+            height: 63px;
+            padding: 0px 20px;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            border: 1px solid rgba(138, 138, 138, 0.52);
+            background: #FFF;
+            margin: 10px auto; /* Centering and adding some vertical spacing */
+        }
+
+        .name-container {
+            display: flex;
+             gap: 10px; /* spacing between the two input fields */
+        }
+
+        input[type="name"]{
+            display: flex;
+            height: 63px;
+            padding: 0px 20px;
+            align-items: center;
+            border-radius: 12px;
+            border: 1px solid rgba(138, 138, 138, 0.52);
+            background: #FFF;
+
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        h1{
+            font-family: 'Dela Gothic One', serif;
+            font-size: 72px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120.5%;
+            margin-bottom: 10px;
+        }
+
+        h3{
+            margin-top: 10px;
+            color: #20263B;
+            text-align: center;
+            font-family: 'Dela Gothic One', serif;
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 117.8%; /* 37.696px */
+
+        }
+        
+        .password{
+            color: #4E4F4E;
+            text-align: center;
+            font-family: League Spartan;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: normal;
+        }
+
+        .btn{
+            display: inline-flex;
+            padding: 6.009px 12.017px;
+            justify-content: center;
+            align-items: center;
+            gap: 6.009px;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            background: #E278D1;
+            box-shadow: 0px -0.75107px 0px 0px rgba(47, 43, 67, 0.10) inset, 0px 0.75107px 2.25322px 0px rgba(47, 43, 67, 0.10);
+        }
+
+        .navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 767px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#home"> About</a>
+        <a href="/projects">Projects</a>
+        <a href="#tutorial">Tutorial</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="container">
+
+    <div class="container">
+        <h1>Create a free account</h1>
+        <h3>Access free, real-world projects to build a stand-out portfolio</h3>
+        <form action="/signup" method="post">
+            <div class="name-container">
+                <input type="name" id="first_name" name="first_name" placeholder="First Name" required>
+                <input type="name" id="last_name" name="last_name" placeholder="Last Name" required>
+            </div>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <div>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <p class="password">At least 8 characters. 1 capital letter, 1 lowercase letter, and 1 special character.</p>
+            </div>
+            <button type="submit">Signup</button>
+        </form>
+    </div>
+    
+</body>
+</html>

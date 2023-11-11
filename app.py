@@ -19,7 +19,7 @@ import uuid
 app = Flask(__name__)
 app.secret_key = os.environ.get("secret_key", "secret_default_key")
 database_uri = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://",1)
-app.config['DATABASE_URI'] = database_uri
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

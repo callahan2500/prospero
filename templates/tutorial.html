@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+
+
+    <title>Prospero | Tutorials</title>
+    <style>
+        body{
+            background-color: #FFFAF4;
+        }
+
+        h2{
+            font-family: "Dela Gothic One", serif;
+            font-weight: 200;
+        }
+        
+        p{
+            font-family: "League Spartan", serif;
+
+        }
+        
+        .doc-container {
+            margin-top: 20px;
+            display: flex;
+        }
+
+        .doc-nav {
+            width: 20%; /* Adjust as needed */
+            padding: 20px;
+            border-right: 1px solid #e0e0e0; /* Optional separator line */
+            box-sizing: border-box;
+        }
+
+        .doc-nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .doc-nav a {
+            display: block;
+            padding: 10px 0;
+            text-decoration: none;
+            color: #333; /* Adjust as needed */
+            transition: color 0.3s ease;
+            font-family: "League Spartan", serif;
+        }
+
+        .doc-nav a:hover {
+            color: #007BFF; /* Adjust as needed */
+        }
+
+        .doc-content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .doc-content section {
+            margin-bottom: 40px; /* Spacing between sections */
+        }
+
+        .navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 767px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#home"> About</a>
+        <a href="/projects">Projects</a>
+        <a href="#tutorial">Tutorial</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="doc-container">
+
+        <!-- Side Navigation -->
+        <nav class="doc-nav">
+            <ul>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#completing-project">Completing a Project</a></li>
+                <li><a href="#generating-case-study">Generating a Case Study</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="#examples">Examples</a></li>
+            </ul>
+        </nav>
+    
+        <!-- Main Content -->
+        <div class="doc-content">
+            <section id="getting-started">
+                <h2>Getting Started</h2>
+                <p>
+                    Welcome to Sprintfolio! An experience-based design program designed to help you accelerate your UX career. The next few sections offer tutorials
+                </p>
+                <!-- Content for this section here -->
+            </section>
+            
+            <section id="completing-project">
+                <h2>Completing a Project</h2>
+                <!-- Content for this section here -->
+            </section>
+            
+            <!-- Add more sections as needed -->
+    
+        </div>
+    
+    </div>
+
+
+</body>
+</html>
+

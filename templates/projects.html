@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prospero | Select a Project</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFAF4;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 50%;
+        }
+        header {
+            color: #000;
+            text-align: center;
+            padding-top: 30px;
+            padding-bottom: 15px; /* Adjusted padding */
+            min-height: 70px;
+        }
+        .main {
+            padding: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .styled-select {
+            width: 586px;
+            height: 41.493px;
+            padding: 0px 17px;
+            border-radius: 17px;
+            background: #FFF;
+            box-shadow: 0px 0px 0px 3.18748px rgba(132, 66, 211, 0.48);
+            appearance: none;
+            cursor: pointer;
+        }
+        .button {
+            display: inline-block;
+            background-color: #50b3a2;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 20px auto 0 auto; /* Adjusted margin */
+        }
+        .button:hover {
+            background-color: #4d9a91;
+        }
+        h1{
+            font-family: "Dela Gothic One", 'serif';
+            font-size: 40px;
+            margin-bottom: 15px; /* Adjusted margin */
+        }
+        h2{
+            font-family: "League Spartan", 'sans-serif';
+            margin-top: 0px;
+            font-weight: 100;
+        }
+        form {
+            text-align: center; /* Centering the button */
+        }
+
+        
+        .navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 767px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#home"> About</a>
+        <a href="/projects">Projects</a>
+        <a href="#tutorial">Tutorial</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="wrapper">
+        <div class="container">
+            <header>
+                <h1>Choose a project</h1>
+            </header>
+            <div class="main">
+                <h2>Let AI guide you through your next case study experience</h2>
+                <form action="/load_project" method="post">
+                    <select name="project" class="styled-select">
+                        {% for project in projects %}
+                            <option value="{{ project.id }}">{{ project.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="button">Generate Project</button>
+                </form>
+                <p>Need help getting started? Read our Getting Started Guide</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
