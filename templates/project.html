@@ -496,7 +496,7 @@
                             </label>
                         </div>
                         {% else %}
-                        <textarea name="taskInput{{ task.id }}" placeholder="Paste a link for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
+                        <textarea name="taskInput{{ task.id }}" placeholder="Paste your work for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
                         {% endif %}
                     </li>
                     {% endfor %}

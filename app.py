@@ -60,8 +60,8 @@ class User(UserMixin, db.Model):
 class ProjectTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
-    companyOverview = db.Column(db.String(1000))
-    objective = db.Column(db.String(1000))
+    companyOverview = db.Column(db.String(1500))
+    objective = db.Column(db.String(1500))
     steps = db.relationship('StepTemplate', back_populates='project_template', lazy=True)
 
 class StepTemplate(db.Model):
@@ -75,7 +75,7 @@ class StepTemplate(db.Model):
     
 class TaskTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(500), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     step_template_id = db.Column(db.Integer, db.ForeignKey('step_template.id'), nullable=False)
     step_template = db.relationship('StepTemplate', back_populates='tasks')
     input_type = db.Column(db.String, nullable=False, default='text')  # Added default value
@@ -92,7 +92,7 @@ class Project(db.Model):
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    link = db.Column(db.String(1500))
+    link = db.Column(db.Text)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('task_template.id'), nullable=False)
 
