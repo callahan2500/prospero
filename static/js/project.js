@@ -101,16 +101,20 @@ function handleSubmitOrNextButtonClick() {
                     });
                 } else if (taskType === 'file') {
                     const fileInput = taskItem.querySelector('input[type="file"]');
-                    if (!fileInput.files.length) {
-                        console.log("No file chosen for task:", taskId);  // Log this
-                        allFilled = false;
-                        return;  // exit this iteration of the loop
+                    if(fileInput.getAttribute('data-uploaded')==='true'){
+                        console.log('File already uploaded for task ${taskId}');
+                    } else{
+                        if (!fileInput.files.length) {
+                            console.log("No file chosen for task:", taskId);  // Log this
+                            allFilled = false;
+                            return;  // exit this iteration of the loop
+                        }
+                        // Storing the File object for now, we'll handle it during the fetch call
+                        tasksData.push({
+                            task_id: taskId,
+                            taskFile: fileInput.files[0]
+                        });
                     }
-                    // Storing the File object for now, we'll handle it during the fetch call
-                    tasksData.push({
-                        task_id: taskId,
-                        taskFile: fileInput.files[0]
-                    });
                 }
             });
 
@@ -219,16 +223,22 @@ function handleSaveButtonClick(){
                     });
                 } else if (taskType === 'file') {
                     const fileInput = taskItem.querySelector('input[type="file"]');
-                    if (!fileInput.files.length) {
-                        console.log("No file chosen for task:", taskId);  // Log this
-                        allFilled = false;
-                        return;  // exit this iteration of the loop
+                    //check if a file has been previously uploaded using data-uploaded attribute
+                    if (fileInput.getAttribute('data-uploaded')==='true'){
+                        console.log('File has already been uploaded for task ${taskID}');
+                    } else {
+
+                        if (!fileInput.files.length) {
+                            console.log("No file chosen for task:", taskId);  // Log this
+                            allFilled = false;
+                            return;  // exit this iteration of the loop
+                        }
+                        // Storing the File object for now, we'll handle it during the fetch call
+                        tasksData.push({
+                            task_id: taskId,
+                            taskFile: fileInput.files[0]
+                        });
                     }
-                    // Storing the File object for now, we'll handle it during the fetch call
-                    tasksData.push({
-                        task_id: taskId,
-                        taskFile: fileInput.files[0]
-                    });
                 }
             });
 

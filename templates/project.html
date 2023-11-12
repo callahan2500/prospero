@@ -489,14 +489,20 @@
                         <p><b>Task {{ loop.index }}:</b> {{ task.description|markdown|safe }}</p>
                         {% if task.input_type == "file" %}
                         <div class="file-upload-wrapper">
-                            <input type="file" name="taskFile{{ task.id }}" id="taskFile{{ task.id }}" accept=".png,.jpg,.jpeg,.svg,.pdf" style="display:none;">
+                            {% set task_data = user_tasks.get(task.id, None) %}
+                            <input type="file" name="taskFile{{ task.id }}" id="taskFile{{ task.id }}" accept=".png,.jpg,.jpeg,.svg,.pdf" style="display:none;" {% if task_data %} data-uploaded="true" {% endif %}>
                             <label for="taskFile{{ task.id }}" class="file-upload-container">
+                                {% if task_data %}
+                                <span class="upload-icon">✅</span>
+                                <span class="file-name">{{ task_data }}</span>
+                                {% else %}
                                 <span class="upload-icon">📤</span>
                                 <span class="file-name">Click to upload (accepted: .png, .jpg, .jpeg, .svg, .pdf)</span>
+                                {% endif %}
                             </label>
                         </div>
                         {% else %}
-                        <textarea name="taskInput{{ task.id }}" placeholder="Paste your work for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
+                        <textarea name="taskInput{{ task.id }}" placeholder="Paste for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
                         {% endif %}
                     </li>
                     {% endfor %}
@@ -530,9 +536,6 @@
         {% endfor %}
     </form>
     
-    
-
-
 
 
     <div id="confirmationModal" class="modal">
