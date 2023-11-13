@@ -402,18 +402,25 @@ def generate_presigned_url(bucket_name, object_name, expiration=3600):
 @app.route('/make_project_public', methods=['POST'])
 def make_project_public():
     if not current_user.is_authenticated:
-        return jsonify(success=False), 401  # or redirect to login page
+        current_app.logger.info("User not authenticated")
+        return jsonify(success=False), 401
 
     data = request.get_json()
     project_id = data.get('project_id')
     project = Project.query.get(project_id)
-    if project and project.user_id == current_user.id:  # Check if the current user owns the project
-        project.is_public = True
-        db.session.commit()
-        return jsonify(success=True)
-    else:
-        # If the project doesn't exist or doesn't belong to the user, return an error
-        return jsonify(success=False, message="Project not found or access denied."), 404
+    if not project:
+        current_app.logger.info(f"Project {project_id} not found")
+        return jsonify(success=False, message="Project not found."), 404
+
+    if project.user_id != current_user.id:
+        current_app.logger.info(f"User {current_user.id} does not own project {project_id}")
+        return jsonify(success=False, message="Access denied."), 404
+
+    project.is_public = True
+    db.session.commit()
+    current_app.logger.info(f"Project {project_id} made public by user {current_user.id}")
+    return jsonify(success=True)
+
 
 
 @app.route('/result/<int:project_id>')

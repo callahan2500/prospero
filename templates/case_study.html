@@ -101,10 +101,6 @@
         }
 
 
-
-
-
-
         .two-column {
             display: flex;
             flex-wrap: wrap;
@@ -265,7 +261,7 @@
     <!--Project Overview-->
     <div class="container">
         <h2>Project Overview</h2>
-        <p>{{ project_template.companyOverview}}</p>
+        <p>{{ project_template.companyOverview|markdown|safe}}</p>
     </div>
 
      <!--The Problem & Solution statements-->
