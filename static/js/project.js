@@ -143,7 +143,7 @@ function handleSubmitOrNextButtonClick() {
             .then(data => {
                 if (data.success) {
                     if (stepNumber === lastStepIndex) {
-                        return fetch('/make_project_public', {
+                        return fetch('/make_public', {
                             method: 'POST',
                             headers:{
                                 'Content-Type': 'application/json'

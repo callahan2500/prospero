@@ -399,7 +399,7 @@ def generate_presigned_url(bucket_name, object_name, expiration=3600):
 
     return response
 
-@app.route('/make_project_public', methods=['POST'])
+@app.route('/make_public', methods=['POST'])
 def make_project_public():
     if not current_user.is_authenticated:
         current_app.logger.info("User not authenticated")
