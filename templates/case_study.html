@@ -82,6 +82,15 @@
 
         }
 
+        .container img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* This will remove any extra space below the image */
+            margin: 0 auto; /* This will center the image in the container if it's not full width */
+            box-sizing: border-box; /* Include padding and borders in the element's total width and height */
+        }
+
+
         .imgcontainer {
             display: flex;
             justify-content: center;
@@ -92,13 +101,6 @@
             
         }
 
-        .imgcontainer-inside {
-            border-radius: 10px; /* Rounded corners for the image */
-            display: block; /* Ensures the image is a block-level element to accept margin auto for centering */
-            margin: 0 auto; /* Centers the image horizontally within its container */
-            width: 100%; /* Sets the width of the image to 90% of its parent container */
-            height: auto; /* Maintains the aspect ratio of the image */
-        }
 
 
         .two-column {
@@ -129,6 +131,7 @@
             flex-direction: column;
             gap: 20px; 
             box-sizing: border-box;
+            min-width: calc(50%-20px);
         }
 
         .column-container {
@@ -349,7 +352,6 @@
     <div class="title-container">
         <h1>Define</h1>
     </div>
-
     
     <div class="two-column columns-container">
         <div class="column">
@@ -461,20 +463,24 @@
         <h1>Prototype</h1>
     </div>
 
-    <!--MoodBoard-->
-    <div class="container">
-        <h3>Mood Board</h3>
-        <img src="{{ tasks_by_endpoint['mood_board'].link }}" alt="mood_board">
+    <div class="two-column columns-container">
+        <div class="column">
+            <div class="container column-container">
+                <h3>Mood Board</h3>
+                <img src="{{ tasks_by_endpoint['mood_board'].link }}" alt="mood_board">
 
-    </div>
-
-    <!--Style Guide-->
-    <div class="container">
-        <h3>Style Guide</h3>
-        <img src="{{ tasks_by_endpoint['style_guide'].link }}" alt="Style Guide">
-        <div class="key-points">
-            <p>personalized learning</p>
+            </div>
         </div>
+        <div class="column">
+            <div class="container column-container">
+                <h3>Style Guide</h3>
+                <img src="{{ tasks_by_endpoint['style_guide'].link }}" alt="Style Guide">
+                <div class="key-points">
+                    <p>personalized learning</p>
+                </div>
+            </div>
+        </div>
+    
     </div>
 
     <!--Designs-->

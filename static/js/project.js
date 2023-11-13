@@ -243,6 +243,7 @@ function handleSaveButtonClick(){
 
             const formData = new FormData();
             formData.append('project_id', projectId);
+            formData.append('project_template_id', projectTemplateId);
             formData.append('problem_statement', problemStatement.value);
             console.log("Task Data", tasksData);
             console.log("Problem Statement", problemStatement);
