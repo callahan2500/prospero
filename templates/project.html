@@ -606,6 +606,7 @@
         <div class="step-column">
             <form id="taskForm">
                 <input type="hidden" id="project-id" value="{{ project_id }}">
+                <input type="hidden" id="project-template-id" value="{{ project_template_id }}">
 
                 {% for step in project_template.steps %}
                 <div class="container step-container" id="step{{ loop.index }}-container">

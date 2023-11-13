@@ -1,4 +1,5 @@
 const projectId = document.getElementById('project-id').value; //Project ID
+const projectTemplateId = document.getElementById('project-template-id').value; //Project Template ID
 const stepContainers = document.querySelectorAll('.step-container'); //Step Container
 const lastStepIndex = stepContainers.length; //Which step we're one
 const modal = document.getElementById('confirmationModal'); //Confirmation Modal
@@ -122,6 +123,7 @@ function handleSubmitOrNextButtonClick() {
 
             const formData = new FormData();
             formData.append('project_id', projectId);
+            formData.append('project_template_id', projectTemplateId);
             formData.append('problem_statement', problemStatement.value);
             console.log("Task Data", tasksData);
             tasksData.forEach(taskData => {
@@ -143,7 +145,7 @@ function handleSubmitOrNextButtonClick() {
             .then(data => {
                 if (data.success) {
                     if (stepNumber === lastStepIndex) {
-                        return fetch('/make_public', {
+                        return fetch('/make_project_public', {
                             method: 'POST',
                             headers:{
                                 'Content-Type': 'application/json'

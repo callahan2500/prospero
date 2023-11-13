@@ -285,16 +285,16 @@ def ask():
 @app.route('/submit_tasks', methods=['POST'])
 @login_required
 def submit_tasks():
-    project_id = request.form.get('project_id')
+    project_template_id = request.form.get('project_template_id')
     
-    print(f"Checking for project with user ID {current_user.id} and template ID {project_id}")
+    print(f"Checking for project with user ID {current_user.id} and template ID {project_template_id}")
     
     # Check if a project exists for the user and the selected template
-    user_project = Project.query.filter_by(user_id=current_user.id, template_id=project_id).first()
+    user_project = Project.query.filter_by(user_id=current_user.id, template_id=project_template_id).first()
     
     # If there's no project for this user and template, create one
     if not user_project:
-        user_project = Project(user_id=current_user.id, template_id=project_id)
+        user_project = Project(user_id=current_user.id, template_id=project_template_id)
         db.session.add(user_project)
         db.session.commit()
 
@@ -399,26 +399,22 @@ def generate_presigned_url(bucket_name, object_name, expiration=3600):
 
     return response
 
-@app.route('/make_public', methods=['POST'])
+@app.route('/make_project_public', methods=['POST'])
 def make_project_public():
     if not current_user.is_authenticated:
-        current_app.logger.info("User not authenticated")
         return jsonify(success=False), 401
 
     data = request.get_json()
     project_id = data.get('project_id')
     project = Project.query.get(project_id)
     if not project:
-        current_app.logger.info(f"Project {project_id} not found")
         return jsonify(success=False, message="Project not found."), 404
 
     if project.user_id != current_user.id:
-        current_app.logger.info(f"User {current_user.id} does not own project {project_id}")
         return jsonify(success=False, message="Access denied."), 404
 
     project.is_public = True
     db.session.commit()
-    current_app.logger.info(f"Project {project_id} made public by user {current_user.id}")
     return jsonify(success=True)
 
 
@@ -494,9 +490,10 @@ def project(project_template_id):
     print(f"User ID: {current_user.id}, Project Template ID: {project_template_id}")
     print("User Project:", user_project)
     print("User Tasks:", user_tasks)
+    project_id = user_project.id
 
     user_problem_statement = user_project.problem_statement if user_project else None
-    return render_template("project.html", project_template=project_template, user_tasks=user_tasks, project_id=project_template_id, user_problem_statement=user_problem_statement, user_project=user_project)
+    return render_template("project.html", project_template=project_template, user_tasks=user_tasks, project_template_id=project_template_id, project_id=project_id, user_problem_statement=user_problem_statement, user_project=user_project)
 
 
 if __name__ == "__main__":
