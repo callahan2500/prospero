@@ -21,16 +21,12 @@ function handleHelpButtons() {
 }
 
 
-//Sends Help input to /ask and then returns & presents response//
+// Sends Help input to /ask and then returns & presents response
 function handleHelpTextInputs() {
     var inputs = document.querySelectorAll('.help-text');
     inputs.forEach(function (input) {
         input.addEventListener('change', function () {
             var question = this.value;
-            var projectBriefElement = document.querySelector('.container:nth-of-type(1) p');
-            var objectiveElement = document.querySelector('.container:nth-of-type(2) p');
-            var projectBrief = projectBriefElement ? projectBriefElement.textContent : '';
-            var objective = objectiveElement ? objectiveElement.textContent : '';
 
             fetch('/ask', {
                 method: 'POST',
@@ -39,21 +35,22 @@ function handleHelpTextInputs() {
                 },
                 body: JSON.stringify({
                     question: question,
-                    projectBrief: projectBrief,
-                    objective: objective,
+                    project_template_id: projectId, // You pass the project ID, not the template directly
+                    
                 }),
             })
             .then(response => response.json())
             .then(data => {
                 console.log("Received Data:", data);
-                var answer = document.createElement('p');
-                answer.textContent = data.answer || data.error;
-                this.parentNode.appendChild(answer);
+                var answerElement = document.createElement('p');
+                answerElement.textContent = data.answer || data.error;
+                input.parentNode.appendChild(answerElement); // Append the answer after the input
             })
             .catch(error => console.error(error));
         });
     });
 }
+
 
 function sanitizeInput(input) {
     return DOMPurify.sanitize(input, { ALLOWED_TAGS: ['iframe'], ADD_ATTR: ['allowfullscreen'] });
@@ -292,17 +289,6 @@ function handleBackButtonClick(){
 
 }
 
-//Handles Next Button [DEPRECATED]
-function handleNextButtonClick(){
-    nextBtn.addEventListener('click', function () {
-        modal.style.display = 'none';
-        let stepContainer = document.querySelector(`#step${currentStep}-container`);
-        stepContainer.style.display = 'none';
-        currentStep++;
-        document.querySelector(`#step${currentStep}-container`).style.display = 'block';
-    });
-
-}
 
 function handleFileUploadIcon(){
     const fileInputs = document.querySelectorAll('.file-upload-wrapper input[type="file"]');
@@ -317,6 +303,7 @@ function handleFileUploadIcon(){
     });
 
 }
+
 
 function setupEventListeners(){
     handleHelpButtons();

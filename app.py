@@ -13,6 +13,7 @@ from botocore.exceptions import NoCredentialsError
 import uuid
 import markdown.extensions.fenced_code
 from markdown import markdown
+from datetime import datetime
 
 
 #INITIALIZATIONS
@@ -38,6 +39,7 @@ login_manager.login_view = 'index'
 
 
 #OpenAI API Key
+
 openai.api_key = os.environ.get("OPENAI_KEY")
 
 #S3 Client Connection
@@ -80,6 +82,8 @@ class TaskTemplate(db.Model):
     step_template = db.relationship('StepTemplate', back_populates='tasks')
     input_type = db.Column(db.String, nullable=False, default='text')  # Added default value
     case_study_endpoint = db.Column(db.String, nullable=False)
+    is_deleted = db.Column(db.Boolean, default=False, nullable=False)
+
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -95,6 +99,20 @@ class Task(db.Model):
     link = db.Column(db.Text)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('task_template.id'), nullable=False)
+
+class Thread(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    # Relationships
+    messages = db.relationship('Message', backref='thread', lazy=True) 
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    thread_id = db.Column(db.Integer, db.ForeignKey('thread.id'), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    role = db.Column(db.String(50), nullable=False)  # 'user' or 'assistant'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class UserView(ModelView):
     column_display_pk = True  # Display primary key in the list view
@@ -189,7 +207,6 @@ def projects():
     return render_template("projects.html", projects=all_projects)
 
 
-#OPEN_AI API ROUTES
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.json
@@ -247,7 +264,9 @@ def ask():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-def summarize_text(text):
+
+
+#def summarize_text(text):
     prompt = f"Concisely summarize the following into 2-3 sentences: {text}"
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
