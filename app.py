@@ -206,65 +206,44 @@ def projects():
     all_projects = ProjectTemplate.query.all()
     return render_template("projects.html", projects=all_projects)
 
-
-@app.route("/ask", methods=["POST"])
-def ask():
+@app.route('/ask', methods=['POST'])
+def ask_endpoint():
     data = request.json
-    question = data.get('question', '')
-    projectBrief = 'We are a leading company specializing in creating chatbots for virtual educational organizations, including bootcamps, online universities, and homeschooling platforms. Our mission is to enhance the educational experience through intuitive and AI-powered chatbot solutions.'#data.get('projectBrief', '')
-    objective = 'Design a customizable chatbot that aligns with each clients branding. This chatbot should cater to educational programs serving people of all ages. The primary goal is to facilitate efficient communication between teachers and students, with features that aid in teaching and learning.'#data.get('objective', '')
-    previous_interactions = data.get('previous_interactions', [])  # A list to hold previous Q&A pairs.
-    
-    context = f"Company Overview: {projectBrief}\nObjective: {objective}"
-    interactions = "\n".join(previous_interactions)
-    
-    prompt = f"{context}\n{interactions}\n\nQuestion from the user: {question}\n Based on the context provided, " \
-             "please do not simply restate the problem. Instead, provide a specific, clear, " \
-             "and actionable response or suggest the next steps that can be taken to solve the problem. " \
-             "If the context is not sufficient to answer, please ask clarifying questions to get more information."
-    
-    #prompt = f"{context}\n\nUser: {question}\nAI:"
+    question = data.get('question')
+    thread_id = data.get('thread_id')  # This should be passed in the request or determined beforehand
+
+    # Ensure both question and thread_id are provided
+    if not question or not thread_id:
+        return jsonify({'error': 'Missing question or thread ID'}), 400
+
     try:
-        response = openai.ChatCompletion.create(
-            model = 'gpt-4-1106-preview',
-            messages =[
-                {
-                    "role": "user",
-                    "content": question
-                },
-                {
-                    "role":"assistant",
-                    "content": "Using the following information, provide a clear answer that helps the user complete the Task they're on."
-                },
-                {
-                    "role": "assistant",
-                    "content": projectBrief
-                },
-                {
-                    "role": "assistant",
-                    "content": objective 
-                },
-                {
-                    "role":"assistant",
-                    "content":"They are on Step 1: Empathsize and working on Task  2  Analyze your notes and draft 2-3 user personas. Use this Figma template to structure and present your personas."
-                }
-
-            ],
-            temperature=1,
-            max_tokens=700,
+        # Add a message to the thread
+        message = openai.Message.create(
+            model="gpt-3.5-turbo",  # Replace with the appropriate model
+            thread_id=thread_id,
+            role="user",
+            content=question
         )
-        print("OpenAI Response: ", response.choices)  # Add this line
 
-        
-        answer = response.choices[0].message['content'].strip()
-        new_interaction = f"User: {question}\nAI: {answer}"
-        previous_interactions.append(new_interaction)
-        print(answer)
-        return jsonify({"answer": answer, "previous_interactions": previous_interactions})
+        # Run the Assistant on the Thread to trigger responses
+        run = openai.Run.create(
+            thread_id=thread_id,
+            assistant_id='your-assistant-id',  # Replace with your assistant ID
+            instructions="Your custom instructions here"  # Optional additional instructions for the run
+        )
+
+        # Retrieve the latest messages from the Assistant
+        messages = openai.Message.list(
+            thread_id=thread_id
+        )['data']  # Adjust according to how you want to filter the messages
+
+        # Return the messages as JSON, filtering for the Assistant's responses if necessary
+        return jsonify({'messages': messages})
+
+    except openai.error.OpenAIError as e:
+        return jsonify({'error': str(e)}), 500
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 #def summarize_text(text):
     prompt = f"Concisely summarize the following into 2-3 sentences: {text}"
