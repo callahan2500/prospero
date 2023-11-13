@@ -84,7 +84,6 @@ document.body.addEventListener('click', function (event) {
             // Assuming 'projectId' is defined and accessible within the scope
             const projectId = document.getElementById('project-id').value; //Project ID
             
-            // Send the sanitized message to your Flask backend
             fetch('/ask', {
                 method: 'POST',
                 headers: {
@@ -92,27 +91,29 @@ document.body.addEventListener('click', function (event) {
                 },
                 body: JSON.stringify({
                     question: sanitizedMessage,
-                    project_template_id: projectId,
+                    thread_id: projectId, // Changed from project_template_id to thread_id
                 }),
             })
             .then(response => response.json())
             .then(data => {
                 // Append the user's message to the chat
                 appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), sanitizedMessage, true);
-
-                // Append OpenAI's response to the chat
-                if(data.answer) {
-                    appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), data.answer, false);
+            
+                // Assuming 'data.messages' contains an array of message objects, 
+                // and you're looking for the last message from the Assistant
+                var assistantMessage = data.messages.filter(m => m.role === 'assistant').pop();
+                if(assistantMessage) {
+                    appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), assistantMessage.content, false);
                 } else {
-                    // Handle any error or special messages like "I don't understand" as needed
-                    console.error('Error or no answer received:', data.error || 'No answer');
+                    // Handle the case where there's no assistant's message in response
+                    console.error('No response from the assistant:', data.error || 'No response data');
                 }
             })
             .catch(error => {
                 // Handle fetch error
                 console.error('Fetch error:', error);
             });
-
+            
             // Clear the input field after sending the message
             chatInput.value = ''; 
         }
