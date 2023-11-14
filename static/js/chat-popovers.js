@@ -50,24 +50,32 @@ function reinitializePopovers() {
       new bootstrap.Popover(popoverTriggerEl, {
         container: 'body',
         html: popoverTriggerEl.id === 'question-daemon', // Only allow HTML for question-daemon
+        customClass: 'popover-body', // This is your custom class for targeting the popover
         sanitize: false,
         content: content
       });
     });
 }
 
-// Function to append messages to chat body inside popover
+// Updated function to append messages to chat body inside popover
 function appendMessageToChat(container, message, isUser) {
-    var messageElement = document.createElement('div');
-    messageElement.classList.add('d-flex', isUser ? 'justify-content-end' : 'justify-content-start');
-    messageElement.innerHTML = `
-        <div class="chat-message ${isUser ? 'user' : 'openai'}">
-            ${DOMPurify.sanitize(message)}
-        </div>
-    `; // Apply necessary styling classes
-    container.appendChild(messageElement);
+    var messageBubble = document.createElement('div');
+    messageBubble.classList.add('d-flex', isUser ? 'justify-content-end' : 'justify-content-start');
+
+    var messageContent = document.createElement('p');
+    messageContent.classList.add('small', 'p-2', 'mb-3', 'rounded-3');
+    // Set the background color based on whether the message is from the user or the assistant
+    messageContent.style.backgroundColor = isUser ? '#dcf8c6' : '#f5f6f7'; // Choose colors as per your design
+    messageContent.innerHTML = DOMPurify.sanitize(message);
+
+    var wrapperDiv = document.createElement('div'); // Extra wrapper for additional styling if needed
+    wrapperDiv.appendChild(messageContent);
+    
+    messageBubble.appendChild(wrapperDiv);
+    container.appendChild(messageBubble);
     container.scrollTop = container.scrollHeight; // Auto scroll to latest message
 }
+
 
 // Call reinitializePopovers on DOMContentLoaded or when you need to set up the popovers
 document.addEventListener('DOMContentLoaded', function () {
@@ -90,8 +98,7 @@ document.body.addEventListener('click', function (event) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    question: sanitizedMessage,
-                    thread_id: projectId, // Changed from project_template_id to thread_id
+                    user_message: sanitizedMessage
                 }),
             })
             .then(response => response.json())
@@ -99,16 +106,15 @@ document.body.addEventListener('click', function (event) {
                 // Append the user's message to the chat
                 appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), sanitizedMessage, true);
             
-                // Assuming 'data.messages' contains an array of message objects, 
-                // and you're looking for the last message from the Assistant
-                var assistantMessage = data.messages.filter(m => m.role === 'assistant').pop();
-                if(assistantMessage) {
-                    appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), assistantMessage.content, false);
+                // Check if the response contains a message and append it
+                if (data.message) {
+                    appendMessageToChat(chatInput.closest('.chat-interface').querySelector('.chat-messages'), data.message, false);
                 } else {
-                    // Handle the case where there's no assistant's message in response
-                    console.error('No response from the assistant:', data.error || 'No response data');
+                    // Handle the case where there's an error in response
+                    console.error('Error from the assistant:', data.error);
                 }
             })
+
             .catch(error => {
                 // Handle fetch error
                 console.error('Fetch error:', error);
