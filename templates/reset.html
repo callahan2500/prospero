@@ -79,6 +79,18 @@
             box-shadow: 0px -0.75107px 0px 0px rgba(47, 43, 67, 0.10) inset, 0px 0.75107px 2.25322px 0px rgba(47, 43, 67, 0.10);
         }
 
+        .flash-messages {
+            margin-bottom: 15px;
+        }
+
+        .flash-messages p {
+            font-size: 10px;
+            color: #20263B;
+        }
+
+
+
+
         
         .navbar {
             display: flex;
@@ -120,10 +132,11 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="/index"> Home</a>
+        <a href="/"> Home</a>
         <a href="/projects">Projects</a>
         <a href="/tutorial">Tutorial</a>
     </div>
+
 
     <div class="container">
         <h2>Reset Password</h2>
@@ -135,6 +148,18 @@
         </form>
     </div>
 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+
+    
     <!-- Add any additional JavaScript or end of body content here -->
 </body>
 </html>

@@ -565,9 +565,9 @@ def request_reset():
             flash('Submitted! Please check your email.')
         else:
             flash('No account with that email. Please try a different email or create an account.')
-            pass
+
         # Redirect or show a message after the request
-        return redirect(url_for('index'))
+        #return redirect(url_for('index'))
     return render_template('reset.html')
 
 
@@ -612,7 +612,7 @@ def new_password(token):
         if new_password == confirm_password:
             user.password = generate_password_hash(new_password)
             db.session.commit()
-            # flash('Your password has been updated!', 'success')
+            flash('Your password has been updated!', 'success')
             return redirect(url_for('index'))
         else:
             flash('Passwords do not match. Please try agan', 'error')
