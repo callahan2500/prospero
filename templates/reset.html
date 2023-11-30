@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
-    <link rel="icon" type="image/x-icon" href="https://prospero0.s3.us-east-2.amazonaws.com/favicon.ico">
+    <title>Password Reset Request</title>
 
-
-    <title>Sprintfolio</title>
     <style>
         body {
-            background-image: url('https://prospero0.s3.us-east-2.amazonaws.com/website/sprintfolio_background_1x.webp') ;
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
@@ -84,6 +79,7 @@
             box-shadow: 0px -0.75107px 0px 0px rgba(47, 43, 67, 0.10) inset, 0px 0.75107px 2.25322px 0px rgba(47, 43, 67, 0.10);
         }
 
+        
         .navbar {
             display: flex;
             position: fixed;
@@ -119,32 +115,26 @@
 
 
     </style>
+    
+    
 </head>
 <body>
     <div class="navbar">
-        <a href="https://sprintfolio.com/"> About</a>
+        <a href="/index"> Home</a>
         <a href="/projects">Projects</a>
-        <a href="#tutorial">Tutorial</a>
+        <a href="/tutorial">Tutorial</a>
     </div>
 
-    <h1>career school for designers</h1>
-    <h3>personalized, and hands-on learning for every designer out there</h3>
     <div class="container">
-        <form action="/" method="post">
-            <input type="email" id="email" name="email" placeholder="Email" required>
-            <input type="password" id="password" name="password" placeholder="Password" required>
-           
-            <button class="btn" type="submit">Login</button>
+        <h2>Reset Password</h2>
+        <p>Please enter your email address to request a password reset:</p>
         
+        <form action="{{ url_for('request_reset') }}" method="post">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input class="btn" type="submit" value="Request Password Reset">
         </form>
-        <p>Don't have an account? <a href="/signup">Signup</a></p>
-        <p>Forgot your password? <a href="/reset"> Reset Here</a></p>
-  
     </div>
+
+    <!-- Add any additional JavaScript or end of body content here -->
 </body>
 </html>
-
-
-
-
-

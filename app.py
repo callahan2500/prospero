@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
+from flask import Flask, render_template, request, jsonify, redirect, url_for,flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from flask_migrate import Migrate
@@ -16,6 +16,9 @@ from markdown import markdown
 from datetime import datetime
 import time
 import json
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail
+from flask_mail import Message as FlaskMessage
 
 
 #INITIALIZATIONS
@@ -33,6 +36,18 @@ app.config['S3_BUCKET'] = os.environ.get('S3_BUCKET')
 app.config['S3_KEY'] = os.environ.get('S3_KEY')
 app.config['S3_SECRET'] = os.environ.get('S3_SECRET')
 app.config['S3_REGION'] = os.environ.get('S3_REGION')
+app.config['SECURITY_PASSWORD_SALT'] = 'some_random_salt'
+
+
+#Flask-Mail Setup
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # e.g., 'smtp.gmail.com' for Gmail
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.environ.get('USER_EMAIL')
+app.config['MAIL_PASSWORD'] = os.environ.get('USER_EMAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('USER_EMAIL')
+mail = Mail(app)
 
 #Login Management
 login_manager = LoginManager()
@@ -538,6 +553,72 @@ def project(project_template_id):
 
     user_problem_statement = user_project.problem_statement if user_project else None
     return render_template("project.html", project_template=project_template, user_tasks=user_tasks, project_template_id=project_template_id, project_id=project_id, user_problem_statement=user_problem_statement, user_project=user_project)
+
+@app.route('/reset', methods=['GET', 'POST'])
+def request_reset():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = generate_reset_token(user.id)
+            send_reset_email(user.email, token)
+            flash('Submitted! Please check your email.')
+        else:
+            flash('No account with that email. Please try a different email or create an account.')
+            pass
+        # Redirect or show a message after the request
+        return redirect(url_for('index'))
+    return render_template('reset.html')
+
+
+def send_reset_email(user_email, token):
+    reset_url = url_for('new_password', token=token, _external=True)
+    msg = FlaskMessage('Password Reset Request', recipients=[user_email])
+    msg.body = f'''To reset your password, visit the following link: {reset_url}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
+def generate_reset_token(user_id):
+     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+     return serializer.dumps(user_id, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def validate_reset_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        user_id = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'],
+            max_age=expiration
+        )
+    except:
+        return False
+    return user_id
+
+@app.route('/new_password/<token>', methods=['GET', 'POST'])
+def new_password(token):
+    user_id = validate_reset_token(token)
+    if not user_id:
+        # handle invalid or expired token
+        # flash('Invalid or expired token', 'error')
+        return redirect(url_for('index'))
+
+    user = User.query.get(user_id)
+    if request.method == 'POST':
+        new_password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if new_password == confirm_password:
+            user.password = generate_password_hash(new_password)
+            db.session.commit()
+            # flash('Your password has been updated!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Passwords do not match. Please try agan', 'error')
+
+    return render_template('new_password.html', token=token)
+
 
 
 if __name__ == "__main__":
