@@ -108,7 +108,7 @@ function handleSubmitOrNextButtonClick() {
                 confirmNextStep(stepNumber);
                 hideLoadingAnimation();
             } else {
-                await summarizeTasksandPublishProject(projectId);
+                await makeProjectPublic(projectId);
                 hideLoadingAnimation();
                 finalModal.style.display = 'block';
             }
@@ -212,20 +212,6 @@ function confirmNextStep(stepNumber) {
     modal.style.display = 'block';
 }
 
-async function summarizeTasks(projectId) {
-    const response = await fetch('/summarize_tasks', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ project_id: projectId })
-    });
-    console.log(response)
-    if (!response.ok) {
-        throw new Error('Failed to summarize tasks. Got held up in summarizeTasks.');
-    }
-    return response.json();
-}
 
 async function makeProjectPublic(projectId) {
     const response = await fetch('/make_project_public', {
@@ -241,17 +227,7 @@ async function makeProjectPublic(projectId) {
     return response.json();
 }
 
-async function summarizeTasksandPublishProject(projectId) {
-    const summarizeData = await summarizeTasks(projectId);
-    if (!summarizeData.success) {
-        throw new Error('Failed to summarize tasks got held up in summarizeTasksandPublishProjects. Try again later.');
-    }
-    const publicData = await makeProjectPublic(projectId);
-    if (!publicData.success) {
-        throw new Error('Failed to publish the project. Try again later.');
-    }
-    // Successfully made project public
-}
+
 
 
 function handleSaveButtonClick(){

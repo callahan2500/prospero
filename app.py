@@ -338,65 +338,6 @@ def ask():
     else:
         return jsonify({"error": "No assistant message found"}), 404
 
-@app.route('/summarize_tasks', methods=['GET', 'POST'])
-def summarize_tasks():
-    try:
-        # Extract project_id and log it
-        project_id = request.json.get('project_id')
-        app.logger.info(f"Received summarize_tasks request for project_id: {project_id}")
-
-        # Check if project_id is provided
-        if project_id is None:
-            app.logger.error("Missing 'project_id' in the request")
-            return jsonify({"success": False, "error": "Missing 'project_id'"}), 400
-
-        # Query the database
-        text_tasks = Task.query.filter_by(project_id=project_id).all()
-        app.logger.info(f"Found {len(text_tasks)} text tasks for summarization")
-
-        # Process each task
-        for task in text_tasks:
-            task_template = TaskTemplate.query.get(task.template_id)
-            if task_template.input_type == 'text':
-                app.logger.info(f"Summarizing task with ID: {task.id}")
-                summary = get_summary(task.link)
-                if summary is None:
-                    app.logger.error(f"Failed to get summary for task ID: {task.id}")
-                    continue  # Skip this task or handle as needed
-                task.summary_link = summary
-                app.logger.info(f"Task ID: {task.id} summarized")
-            elif task_template.input_type == 'file': 
-                summary = "None"
-                task.summary_link = summary
-
-        # Commit changes to the database
-        db.session.commit()
-        app.logger.info("Summarization complete and committed to database")
-        return jsonify({"success": True})
-
-    except Exception as e:
-        # Log the exception and roll back any database changes
-        app.logger.error(f"Error in summarize_tasks: {e}")
-        db.session.rollback()
-        return jsonify({"success": False, "error": str(e)}), 500
-    
-        
-def get_summary(text):
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role":"system", "content":"Efficiently summarize the key points of the user's text in 2-3 sentences, ensuring accuracy in capturing essential details. The summary should maintain the user's original tone, be in first person (as if written by the user themself), minimize buzzards, and reflect a spartan yet warm style suitable for a public-facing case study aimed at prospective employers."},
-                {"role":"user", "content":f"{text}"}
-            ]
-        ) 
-        summary = response.choices[0].message.content
-
-        return summary
-    except Exception as e:
-        print(f'Error in OpenAI API call: {e}')
-        return None
-
 
 @app.route('/submit_tasks', methods=['POST'])
 @login_required
@@ -605,9 +546,9 @@ def project(project_template_id):
         user_tasks = {task.template_id: task.link for task in user_project.tasks}
         
     # Debugging print statements
-    print(f"User ID: {current_user.id}, Project Template ID: {project_template_id}")
-    print("User Project:", user_project)
-    print("User Tasks:", user_tasks)
+    #print(f"User ID: {current_user.id}, Project Template ID: {project_template_id}")
+    #print("User Project:", user_project)
+    #print("User Tasks:", user_tasks)
     project_id = user_project.id
 
     user_problem_statement = user_project.problem_statement if user_project else None
