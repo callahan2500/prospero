@@ -112,7 +112,6 @@ class Project(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.Text)
-    summary_link = db.Column(db.Text) 
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('task_template.id'), nullable=False)
 

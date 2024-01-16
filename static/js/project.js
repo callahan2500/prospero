@@ -152,7 +152,7 @@ function validateStep(stepContainer) {
                     return;
                 }
 
-                taskData.push({
+                tasksData.push({
                     task_id: taskId,
                     taskFile: fileInput.files[0]
                 });
