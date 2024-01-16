@@ -57,134 +57,200 @@ function sanitizeInput(input) {
     return DOMPurify.sanitize(input, { ALLOWED_TAGS: ['iframe'], ADD_ATTR: ['allowfullscreen'] });
 }
 
+// This function assumes you've added the 'loader' span within the 'submit-button' in your HTML
+function showLoadingAnimation() {
+    const submitButton = document.querySelector('.submit-button');
+    const loader = submitButton.querySelector('.loader');
 
-//Handles saving user input data and retrieving it.
+    // Add a visual cue like a spinner or loading animation to the loader container
+    loader.classList.add('is-loading');
+    // Optionally you could disable the submit button to prevent multiple submissions
+    submitButton.disabled = true;
+}
+
+function hideLoadingAnimation() {
+    const submitButton = document.querySelector('.submit-button');
+    const loader = submitButton.querySelector('.loader');
+
+    // Remove the visual cue
+    loader.classList.remove('is-loading');
+    // Re-enable the submit button
+    submitButton.disabled = false;
+}
+
+
 function handleSubmitOrNextButtonClick() {
     stepContainers.forEach((stepContainer, index) => {
         const stepNumber = index + 1;
-        const button = stepNumber === lastStepIndex 
-            ? stepContainer.querySelector('.submit-button') 
-            : stepContainer.querySelector('.save-button');
+        const isLastStep = stepNumber === lastStepIndex;
+        const buttonSelector = isLastStep ? '.submit-button' : '.save-button';
+        const button = stepContainer.querySelector(buttonSelector);
 
-        if (!button) {
-            console.error("Button not found for step:", stepContainer);
+        if(!button){
+            console.error('Button not found for step:', stepNumber);
             return;
         }
 
-        button.addEventListener('click', function() {
-            let allFilled = true;
-            const tasksData = [];
-            var problemStatement = document.getElementById('problem-statement-input');
-
-
-            stepContainer.querySelectorAll('.task-item').forEach(taskItem => {
-                const taskType = taskItem.getAttribute('data-inputType');
-                //const taskType = taskItem.dataset.inputType;
-                const taskId = taskItem.dataset.taskId;
-                console.log("Task type for task ID" ,taskId, ":", taskType);
-                console.log("Task Type:", taskType);
-                console.log("Task ID:", taskId);
-
-                if (taskType === 'text') {
-                    const taskInput = taskItem.querySelector('textarea');
-                    if (!taskInput.value.trim()) {
-                        allFilled = false;
-                        return;  // exit this iteration of the loop
-                    }
-                    const sanitizedValue = sanitizeInput(taskInput.value);
-                    
-                    tasksData.push({
-                        task_id: taskId,
-                        taskInput: sanitizedValue //Use the santized value instead
-                    });
-                } else if (taskType === 'file') {
-                    const fileInput = taskItem.querySelector('input[type="file"]');
-                    if(fileInput.getAttribute('data-uploaded')==='true'){
-                        console.log('File already uploaded for task ${taskId}');
-                    } else{
-                        if (!fileInput.files.length) {
-                            console.log("No file chosen for task:", taskId);  // Log this
-                            allFilled = false;
-                            return;  // exit this iteration of the loop
-                        }
-                        // Storing the File object for now, we'll handle it during the fetch call
-                        tasksData.push({
-                            task_id: taskId,
-                            taskFile: fileInput.files[0]
-                        });
-                    }
-                }
-            });
-
-            if (!allFilled) {
-                alert("Please fill all the fields or upload the necessary files before proceeding.");
+        button.addEventListener('click', async function() {
+            if (!validateStep(stepContainer)) {
+                alert('Please fill out all tasks before proceeding');
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('project_id', projectId);
-            formData.append('project_template_id', projectTemplateId);
-            formData.append('problem_statement', problemStatement.value);
-            console.log("Task Data", tasksData);
-            tasksData.forEach(taskData => {
-                if (taskData.taskInput) {
-                    formData.append(`taskInput${taskData.task_id}`, taskData.taskInput);
-                } else if (taskData.taskFile) {
-                    formData.append(`taskFile${taskData.task_id}`, taskData.taskFile);
-                }
-            });
+        const formData = constructFormData(stepContainer);
 
-            console.log("Form Data Entries:", [...formData.entries()]);
+        showLoadingAnimation();
 
+        try {
+            await submitTasks(formData);
 
-            fetch('/submit_tasks', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (stepNumber === lastStepIndex) {
-                        return fetch('/make_project_public', {
-                            method: 'POST',
-                            headers:{
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({project_id: projectId})
-                        })
-                        .then(response =>response.json())
-                        .then(data => {
-                            if (data.success){
-                                //Show the final modal only after the project is made public
-                                finalModal.style.display = 'block';
-                            } else {
-                                throw new Error("Failed to Publish Project. Try Again Later.");
-                            }
-                        })
+            if (!isLastStep){
+                confirmNextStep(stepNumber);
+                hideLoadingAnimation();
+            } else {
+                await summarizeTasksandPublishProject(projectId);
+                hideLoadingAnimation();
+                finalModal.style.display = 'block';
+            }
+        } catch (error){
+            console.error('Error', error);
+            alert(error.message || 'Hm, something went wrong. Please try again later');
+        }
 
-                        .catch(error => {
-                            console.error("Error publishing project", error);
-                            alert("We were unable to publish your project. Please try again");
-                        });
-
-                    } else {
-                        let nextStep = stepNumber + 1;
-                        modalText.textContent = `You just completed Step ${stepNumber}. Now we're going to do ${nextStep}.`;
-                        modal.style.display = 'block';
-                        return Promise.resolve({success: true});
-                    }
-                } else {
-                    alert("There was a problem saving your tasks. Please try again.");
-                }
-            })
-
-
-            .catch(error => {
-                console.error("Error submitting tasks:", error);
-                alert("There was a problem saving your tasks. Please try again.");
-            });
         });
+
     });
+}
+
+
+function validateStep(stepContainer) {
+    let allFilled = true;
+    const tasksData = [];
+    stepContainer.querySelectorAll('.task-item').forEach(taskItem => {
+        const taskType = taskItem.getAttribute('data-inputType');
+        const taskId = taskItem.dataset.taskId;
+
+        if (taskType === 'text') {
+            const taskInput = taskItem.querySelector('textarea');
+            if (!taskInput.value.trim()) {
+                allFilled = false;
+                return;
+            }
+            tasksData.push({
+                task_id: taskId,
+                taskInput: taskInput.value
+            });
+
+        } else if (taskType === 'file') {
+            const fileInput = taskItem.querySelector('input[type="file"]');
+            if(fileInput.getAttribute('data-uploaded')==='true'){
+                console.log('File already uploaded mate');
+            } else{
+                if(!fileInput.files.length){
+                    console.log("No file chosen for task",taskId);
+                    allFilled = false;
+                    return;
+                }
+
+                taskData.push({
+                    task_id: taskId,
+                    taskFile: fileInput.files[0]
+                });
+                
+            }
+        }
+    });
+    return allFilled;
+}
+
+function constructFormData(stepContainer) {
+    const formData = new FormData();
+    formData.append('project_id', projectId);
+    formData.append('project_template_id', projectTemplateId);
+    const problemStatement = document.getElementById('problem-statement-input');
+    formData.append('problem_statement', problemStatement.value);
+
+    stepContainer.querySelectorAll('.task-item').forEach(taskItem => {
+        const taskId = taskItem.dataset.taskId;
+        const taskType = taskItem.getAttribute('data-inputType');
+
+        if (taskType === 'text') {
+            const taskInput = taskItem.querySelector('textarea');
+            const sanitizedValue = taskInput.value;
+            formData.append(`taskInput${taskId}`, sanitizedValue);
+        } else if (taskType === 'file') {
+            const fileInput = taskItem.querySelector('input[type="file"]');
+            if (fileInput.getAttribute('data-uploaded') !== 'true') {
+                formData.append(`taskFile${taskId}`, fileInput.files[0]);
+            }
+        }
+    });
+
+    return formData;
+}
+
+async function submitTasks(formData) {
+    const response = await fetch('/submit_tasks', {
+        method: 'POST',
+        body: formData
+    });
+    if (!response.ok) {
+        throw new Error('Failed to submit tasks. Please try again later.');
+    }
+
+    const data = await response.json();
+    if (!data.success) {
+        throw new Error('There was a problem saving your tasks. Please try again.');
+    }
+
+    return data;
+}
+
+function confirmNextStep(stepNumber) {
+    let nextStep = stepNumber + 1;
+    modalText.textContent = `You just completed Step ${stepNumber}. Now we're going to do ${nextStep}.`;
+    modal.style.display = 'block';
+}
+
+async function summarizeTasks(projectId) {
+    const response = await fetch('/summarize_tasks', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ project_id: projectId })
+    });
+    console.log(response)
+    if (!response.ok) {
+        throw new Error('Failed to summarize tasks. Got held up in summarizeTasks.');
+    }
+    return response.json();
+}
+
+async function makeProjectPublic(projectId) {
+    const response = await fetch('/make_project_public', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ project_id: projectId })
+    });
+    if (!response.ok) {
+        throw new Error('Failed to publish the project. Try again later.');
+    }
+    return response.json();
+}
+
+async function summarizeTasksandPublishProject(projectId) {
+    const summarizeData = await summarizeTasks(projectId);
+    if (!summarizeData.success) {
+        throw new Error('Failed to summarize tasks got held up in summarizeTasksandPublishProjects. Try again later.');
+    }
+    const publicData = await makeProjectPublic(projectId);
+    if (!publicData.success) {
+        throw new Error('Failed to publish the project. Try again later.');
+    }
+    // Successfully made project public
 }
 
 
@@ -213,7 +279,7 @@ function handleSaveButtonClick(){
                         allFilled = false;
                         return;  // exit this iteration of the loop
                     }
-                    const sanitizedValue = sanitizeInput(taskInput.value);
+                    const sanitizedValue = taskInput.value;
 
 
                     tasksData.push({
@@ -312,6 +378,8 @@ function setupEventListeners(){
     handleHelpButtons();
     handleHelpTextInputs();
     sanitizeInput();
+    showLoadingAnimation();
+    hideLoadingAnimation();
     handleSubmitOrNextButtonClick();
     handleSaveButtonClick();
     handleBackButtonClick();

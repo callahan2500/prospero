@@ -91,8 +91,7 @@ class StepTemplate(db.Model):
     project_template_id = db.Column(db.Integer, db.ForeignKey('project_template.id'), nullable=False)
     tasks = db.relationship('TaskTemplate', back_populates='step_template', lazy=True)
     project_template = db.relationship('ProjectTemplate', back_populates='steps')
-
-    
+  
 class TaskTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text, nullable=False)
@@ -102,7 +101,6 @@ class TaskTemplate(db.Model):
     case_study_endpoint = db.Column(db.String, nullable=False)
     is_deleted = db.Column(db.Boolean, default=False, nullable=False)
 
-
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -111,10 +109,10 @@ class Project(db.Model):
     problem_statement = db.Column(db.Text, nullable=True)
     is_public = db.Column(db.Boolean, default=False, nullable=False)
 
-
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.Text)
+    summary_link = db.Column(db.Text) 
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('task_template.id'), nullable=False)
 
@@ -136,7 +134,6 @@ class UserView(ModelView):
     column_display_pk = True  # Display primary key in the list view
     column_exclude_list = ['password']  # Exclude the password field for security reasons
     form_excluded_columns = ['password']  # Exclude the password field from the form
-
 
 class ProjectTemplateView(ModelView):
     column_display_pk = True  # Display primary key in the list view
@@ -160,6 +157,7 @@ class TaskTemplateView(ModelView):
             'page_size': 10
         }
     }
+
 
 def init_cms(app):
     admin = Admin(app, name='CMS', template_mode='bootstrap3')
@@ -340,6 +338,65 @@ def ask():
     else:
         return jsonify({"error": "No assistant message found"}), 404
 
+@app.route('/summarize_tasks', methods=['GET', 'POST'])
+def summarize_tasks():
+    try:
+        # Extract project_id and log it
+        project_id = request.json.get('project_id')
+        app.logger.info(f"Received summarize_tasks request for project_id: {project_id}")
+
+        # Check if project_id is provided
+        if project_id is None:
+            app.logger.error("Missing 'project_id' in the request")
+            return jsonify({"success": False, "error": "Missing 'project_id'"}), 400
+
+        # Query the database
+        text_tasks = Task.query.filter_by(project_id=project_id).all()
+        app.logger.info(f"Found {len(text_tasks)} text tasks for summarization")
+
+        # Process each task
+        for task in text_tasks:
+            task_template = TaskTemplate.query.get(task.template_id)
+            if task_template.input_type == 'text':
+                app.logger.info(f"Summarizing task with ID: {task.id}")
+                summary = get_summary(task.link)
+                if summary is None:
+                    app.logger.error(f"Failed to get summary for task ID: {task.id}")
+                    continue  # Skip this task or handle as needed
+                task.summary_link = summary
+                app.logger.info(f"Task ID: {task.id} summarized")
+            elif task_template.input_type == 'file': 
+                summary = "None"
+                task.summary_link = summary
+
+        # Commit changes to the database
+        db.session.commit()
+        app.logger.info("Summarization complete and committed to database")
+        return jsonify({"success": True})
+
+    except Exception as e:
+        # Log the exception and roll back any database changes
+        app.logger.error(f"Error in summarize_tasks: {e}")
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+        
+def get_summary(text):
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role":"system", "content":"Efficiently summarize the key points of the user's text in 2-3 sentences, ensuring accuracy in capturing essential details. The summary should maintain the user's original tone, be in first person (as if written by the user themself), minimize buzzards, and reflect a spartan yet warm style suitable for a public-facing case study aimed at prospective employers."},
+                {"role":"user", "content":f"{text}"}
+            ]
+        ) 
+        summary = response.choices[0].message.content
+
+        return summary
+    except Exception as e:
+        print(f'Error in OpenAI API call: {e}')
+        return None
+
 
 @app.route('/submit_tasks', methods=['POST'])
 @login_required
@@ -364,8 +421,8 @@ def submit_tasks():
     #Problem Statement
     problem_statement = request.form.get('problem_statement')
     
-    print(f"Extracted task IDs: {task_ids}")
-    print(problem_statement)
+    #print(f"Extracted task IDs: {task_ids}")
+    #print(problem_statement)
 
     if problem_statement and problem_statement != user_project.problem_statement:
         user_project.problem_statement = problem_statement
@@ -380,11 +437,11 @@ def submit_tasks():
             existing_task = Task.query.filter_by(project_id=user_project.id, template_id=task_id).first()
             
             if existing_task:
-                print(f"Updating existing text task with ID {task_id} and link {input_data}")
+                #print(f"Updating existing text task with ID {task_id} and link {input_data}")
                 if input_data != existing_task.link:
                     existing_task.link = input_data
             else:
-                print(f"Creating new text task with ID {task_id} and link {input_data}")
+                #print(f"Creating new text task with ID {task_id} and link {input_data}")
                 new_task = Task(link=input_data, project_id=user_project.id, template_id=task_id)
                 db.session.add(new_task)
         else:
@@ -403,7 +460,7 @@ def submit_tasks():
                             "ContentType": file.content_type
                         }
                     )
-                    print(f"Uploaded file for task ID {task_id} to S3 with filename {filename}")
+                    #print(f"Uploaded file for task ID {task_id} to S3 with filename {filename}")
                 except NoCredentialsError:
                     print("Error: Missing AWS Credentials")
                     return jsonify(success=False, error="Missing AWS Credentials"), 500
@@ -415,10 +472,10 @@ def submit_tasks():
                 existing_task = Task.query.filter_by(project_id=user_project.id, template_id=task_id).first()
                 
                 if existing_task:
-                    print(f"Updating existing file task with ID {task_id} and link {link}")
+                    #print(f"Updating existing file task with ID {task_id} and link {link}")
                     existing_task.link = link
                 else:
-                    print(f"Creating new file task with ID {task_id} and link {link}")
+                    #print(f"Creating new file task with ID {task_id} and link {link}")
                     new_task = Task(link=link, project_id=user_project.id, template_id=task_id)
                     db.session.add(new_task)
 
@@ -432,6 +489,42 @@ def submit_tasks():
         return jsonify(success=False, error="Database error: " + str(e)), 500
 
 #DATABASE & CASE STUDY ROUTES
+
+@app.route('/result/<int:project_id>')
+def case_study(project_id):
+    # Fetch the specified project by ID regardless of user
+    user_project = Project.query.get(project_id)
+
+    # If the project doesn't exist or isn't public and the user isn't the owner, redirect to home
+    if not user_project or (not user_project.is_public and (current_user.is_anonymous or (current_user.is_authenticated and user_project.user_id != current_user.id))):
+        flash('This project is not available.', 'danger')
+        return redirect(url_for('home'))
+
+    tasks_by_endpoint = {}
+    for task in user_project.tasks:
+        task_template = TaskTemplate.query.get(task.template_id)
+        
+        # If the task is a file, generate a presigned URL for S3 resources
+        # Check if the user is authenticated and is the owner before generating presigned URL
+        if task_template.input_type == "file":
+            presigned_url = generate_presigned_url(app.config['S3_BUCKET'], task.link)
+            task.link = presigned_url
+
+        tasks_by_endpoint[task_template.case_study_endpoint] = task
+
+    required_endpoints = ['user_interviews', 'secondary_research', 'affinity_map', 'empathy_map', 'user_stories', 'competitive_research', 'lofi_wireframe', 'mood_board', 'style_guide', 'designs', 'reflection']
+
+    # Fill missing endpoints with a default message for missing data
+    for endpoint in required_endpoints:
+        if endpoint not in tasks_by_endpoint:
+            default_task = Task(link="No data available")  # Create a default Task instance with a placeholder message
+            tasks_by_endpoint[endpoint] = default_task
+
+    project_template = ProjectTemplate.query.get(user_project.template_id)
+    
+    # Render the case study page with the project and task data
+    return render_template('case_study.html', user_project=user_project, tasks_by_endpoint=tasks_by_endpoint, project_template=project_template)
+
 def generate_presigned_url(bucket_name, object_name, expiration=3600):
     """
     Generate a pre-signed URL to share an S3 object
@@ -478,40 +571,6 @@ def make_project_public():
 
 
 
-@app.route('/result/<int:project_id>')
-def case_study(project_id):
-    # Fetch the specified project by ID regardless of user
-    user_project = Project.query.get(project_id)
-
-    # If the project doesn't exist or isn't public and the user isn't the owner, redirect to home
-    if not user_project or (not user_project.is_public and (current_user.is_anonymous or (current_user.is_authenticated and user_project.user_id != current_user.id))):
-        flash('This project is not available.', 'danger')
-        return redirect(url_for('home'))
-
-    tasks_by_endpoint = {}
-    for task in user_project.tasks:
-        task_template = TaskTemplate.query.get(task.template_id)
-        
-        # If the task is a file, generate a presigned URL for S3 resources
-        # Check if the user is authenticated and is the owner before generating presigned URL
-        if task_template.input_type == "file" and current_user.is_authenticated and user_project.user_id == current_user.id:
-            presigned_url = generate_presigned_url(app.config['S3_BUCKET'], task.link)
-            task.link = presigned_url
-
-        tasks_by_endpoint[task_template.case_study_endpoint] = task
-
-    required_endpoints = ['user_interviews', 'secondary_research', 'affinity_map', 'empathy_map', 'user_stories', 'competitive_research', 'lofi_wireframe', 'mood_board', 'style_guide', 'designs', 'reflection']
-
-    # Fill missing endpoints with a default message for missing data
-    for endpoint in required_endpoints:
-        if endpoint not in tasks_by_endpoint:
-            default_task = Task(link="No data available")  # Create a default Task instance with a placeholder message
-            tasks_by_endpoint[endpoint] = default_task
-
-    project_template = ProjectTemplate.query.get(user_project.template_id)
-    
-    # Render the case study page with the project and task data
-    return render_template('case_study.html', user_project=user_project, tasks_by_endpoint=tasks_by_endpoint, project_template=project_template)
 
 @app.template_filter('markdown')
 def markdown_to_html(text):

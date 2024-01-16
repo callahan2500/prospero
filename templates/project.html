@@ -571,6 +571,25 @@
             background-color: #45a049;
         }
 
+        .loader {
+            display: none; /* Initially hide loader */
+        }
+
+        .is-loading {
+            display: inline-block; /* Display the loader */
+            width: 16px; /* Or any size you want */
+            height: 16px; /* Or any size you want */
+            border: 2px solid #D9D9D9;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
 
     </style>
  
@@ -670,7 +689,6 @@
             
                     <div class="button-group">
                         <div class="button-group-left">
-                            <button type="button" class="help-button">Ask AI for Help</button>
                             <button type="button" class="only-save-button">Save</button>
                         </div>
             
@@ -680,7 +698,10 @@
                             {% endif %}
             
                             {% if loop.last %}
-                            <button type="button" class="submit-button">Submit</button>
+                            <button type="button" class="submit-button">
+                                <span class="loader"></span>Submit
+                            </button>
+                                
                             {% else %}
                             <button type="button" class="save-button">Next Step</button>
                             {% endif %}
