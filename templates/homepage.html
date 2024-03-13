@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+
+    <link rel="icon" type="image/x-icon" href="https://prospero0.s3.us-east-2.amazonaws.com/favicon.ico">
+
+    <title>Sprintfolio | Homepage</title>
+
+    </head>
+    <style>
+        body {
+            background-color: #faf0e6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h3 {
+            margin:0;
+
+        }
+
+        h1 {
+            color: #000;
+            font-size: 51px;
+            font-weight: 500;
+            text-align: center;
+            text-align: left; /* Adjusted */
+            font-family: 'Dela Gothic One', serif;
+        }
+
+        h2 {
+            font-size: 35px; /* Updated font size */
+            margin: 0 0 12px 0; /* Added margin to create space between title and paragraph */
+            font-family: 'Dela Gothic One', serif;
+            font-weight: 300;
+
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-family: 'Deal Gothic One', sans-serif;
+        }
+
+        h4{
+            font-size: 12px;
+            margin-top: 6px;
+            margin-bottom:6px;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 100;
+        }
+
+        h5 {
+            font-size: 12px;
+            margin-top: 6px;
+            margin-bottom:6px;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 100;
+            text-transform: uppercase;
+
+        }
+
+        
+
+        p {
+            color: #565656;
+            font-family: "League Spartan", sans-serif;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;  
+            line-height: 130%; /* 15.6px */
+        }
+
+
+        .tab {
+            max-width: 1250px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            margin-right: 10px;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            position: relative;
+            font-family: "League Spartan", sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            color: #706C6C;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            font-weight: 600;
+            color: #000
+        }
+
+        .tab button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px; /* Height of the underline */
+            background-color: #50D4BC; /* Color of the underline */
+        }
+
+
+
+        .tabcontent {
+            display: none;
+        }
+
+        /* This class will control the visibility and layout of the active tab content */
+        .tabcontent.active {
+            display: grid;
+            max-width: 1250px;
+            margin: 0px auto 20px;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+            /* Removed flex-direction and align-items as they don't apply to grid containers */
+        }
+
+        .title-container{
+            max-width: 1250px;
+            margin: 40px auto 0px;
+            padding: 20px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 10px;
+
+        }
+
+
+        .gallery-container .gallery-card {
+            background-color: #FFF;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 5px 10px rgba(0,0,0,0.04);
+            list-style: none;
+            text-decoration: none;
+            border: 2px solid #000;
+
+        }
+
+
+        .gallery-container .gallery-card img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .gallery-container .gallery-card button {
+            width: 100%;
+            height: 49.655px;
+            padding: 12.414px 16.552px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12.414px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            margin-top: 10px;
+            background-color: #46AA98;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 18px;
+
+        }
+
+        .gallery-container .gallery-card .button-container{
+            display: flex;
+        }
+
+
+
+        .gallery-container .gallery-card .case-study-button {
+            width: 78%;
+            margin-right: 5px;
+        }
+
+        .gallery-container .gallery-card .edit-case-study-button {
+            width: 20%;
+            background-color: #ddd;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .gallery-container .gallery-card .edit-case-study-button .icon{
+            width: 35px;
+            aspect-ratio: 1/1;
+        }
+
+
+        .progress-title-group{
+            display: flex;
+            gap: 2px;
+            justify-content: space-between; /* This separates the buttons */
+
+        }
+        
+        .progress-title-group-left {
+            display: flex;
+            gap:1px;
+
+        }
+        .progress-title-group-right{
+            display: flex;
+            gap:1px;
+            padding-top: 7px;
+        }
+
+        .progress-title-group-right h4 {
+            margin-top:10px;
+            margin-bottom: 10px;
+            vertical-align: baseline;
+        }
+        
+        
+
+        
+        .custom-navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .custom-navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .custom-navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .progress-bar{
+            width: 100%;
+            height: 8px;
+            background-color: #F8DFF4;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #E278D1;
+            transition: width 0.4s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+        }
+
+
+
+        @media (max-width: 1200px) {
+            .gallery-container .gallery-card {
+                padding: 15px;
+            }
+        }
+
+        @media screen and (max-width: 980px) {
+            .gallery-container {
+                margin: 0 auto;
+            }
+            
+        }
+
+        
+    </style>
+    <body>
+        <div class="custom-navbar">
+            <a href="/homepage">Home</a>
+            <a href="/tutorial">Tutorial</a>
+            <a href="https://discord.gg/768meBBHJJ">Discord</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+        <h1 class="title-container">My Sprints</h1>
+
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'ActiveSprints')">Active Sprints</button>
+            <button class="tablinks" onclick="openTab(event, 'CompletedSprints')">Completed Sprints</button>
+            <button class="tablinks" onclick="openTab(event, 'FindNewSprint')">Find a New Sprint</button>
+        </div>
+
+        <div id="ActiveSprints" class="tabcontent gallery-container">
+            {% for project in active_projects %}
+                <div class="gallery-card">
+                    <img src= "{{ project.coverImage }}">
+                    <h3>{{project.title}}</h3>
+                    <h4><b>Client:</b> {{project.client}}</h4>
+                    <p class="objective-text">{{ project.objective[:250]|markdown|safe }}{% if project.objective|length > 250 %}{% endif %}</p>
+                    <h5>{{project.industry}} | {{project.difficulty}}</h5>
+                    <div class="progress-title-group">
+                        <div class="progress-title-group-left">
+                            <h3>My Progress</h3>
+                        </div>
+                        <div class="progress-title-group-right">
+                            <h4> {{ project.completionRate }}% Complete</h4>
+                        </div>
+
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{ project.completionRate }}%;">
+                        </div>
+                    </div>
+            
+                    <button class="button" onclick="loadProject({{ project.id }})">Continue</button>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div id="CompletedSprints" class="tabcontent gallery-container" style="display: none;">
+            {% for project in completed_projects %}
+                <div class="gallery-card">
+                    <img src= "{{ project.coverImage }}">
+                    <h3>{{project.title}}</h3>
+                    <h4><b>Client:</b> {{project.client}}</h4>
+                    <p class="objective-text">{{ project.objective[:250]|markdown|safe }}{% if project.objective|length > 250 %}{% endif %}</p>
+                    <h5>{{project.industry}} | {{project.difficulty}}</h5>
+                    <div class="progress-title-group">
+                        <div class="progress-title-group-left">
+                            <h3>My Progress</h3>
+                        </div>
+                        <div class="progress-title-group-right">
+                            <h4> {{ project.completionRate }}% Complete</h4>
+                        </div>
+
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{ project.completionRate }}%;">
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button class="case-study-button" onclick="viewCaseStudy({{ project.project_id }})">View Case Study</button>
+                        <button class="edit-case-study-button" onclick="loadProject({{ project.id }})">
+                            <img class="icon" src="https://prospero0.s3.us-east-2.amazonaws.com/noun-edit-6483286.svg">
+                        </button> 
+
+                    </div>
+                
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div id="FindNewSprint" class="tabcontent gallery-container" style="display: none;">
+            {% for project in all_projects %}
+                <div class="gallery-card">
+                    <img src= "{{ project.coverImage }}">
+                    <h3>{{project.title}}</h3>
+                    <h4><b>Client:</b> {{project.client}}</h4>
+                    <p class="objective-text">{{ project.objective[:250]|markdown|safe }}{% if project.objective|length > 250 %}{% endif %}</p>
+                    <h5>{{project.industry}} | {{project.difficulty}}</h5>
+                    <button class="button" onclick="loadProject({{ project.id }})">Start</button>           
+                </div>
+            {% endfor %}
+
+        </div>
+    
+    
+        <script src="/static/js/homepage.js"></script>
+
+    </body>
+</html>

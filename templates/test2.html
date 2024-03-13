@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sprintfolio | {{ project_template.title }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+
+    
+    <style>
+
+        body {
+            background-color: #faf0e6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        
+        h1, h3 {
+            margin: 0;
+        }
+
+        h1 {
+            color: #000;
+            font-size: 51px;
+            font-weight: 500;
+            text-align: center;
+            text-align: left; /* Adjusted */
+            font-family: 'Dela Gothic One', serif;
+
+        }
+
+        p, input, button {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 20px;
+
+        }
+
+        .title-container {
+            max-width: 1128px;
+            margin: 0 auto 20px auto;
+            padding: 0 20px;
+            padding-top: 36.1px;
+        }
+
+
+        h2 {
+            font-size: 35px; /* Updated font size */
+            margin: 0 0 12px 0; /* Added margin to create space between title and paragraph */
+            font-family: 'Dela Gothic One', serif;
+            font-weight: 300;
+
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 0 0 12px 0;
+            font-family: 'Deal Gothic One', sans-serif;
+        }
+
+        h4{
+            font-size: 14px;
+            margin: 0 0 10px;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 100;
+        }
+
+        .step-container h3{
+            font-size: 20px;
+            margin: 0 0 12px 0;
+            font-family: 'Deal Gothic One', sans-serif;
+        }
+
+        
+        .step-container h4{
+            font-size: 14px;
+            margin: 0 0 10px;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 100;
+        }
+
+        
+
+        .container {
+            max-width: 1128px;
+            margin: 20px auto;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            border: 2px solid #000;
+            background: #FFF;
+            box-shadow: 4px 4px 0px 0px #50D4BC; /* Adjust as needed */
+
+
+        }
+
+        .main-container{
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap:10px;
+        }
+
+        .container .step-container {
+            margin-left: 0px;
+        }
+
+        .step-container{
+            position: relative;
+        }
+
+        .step{
+            flex: 0.9;
+            margin-top: 10px;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .step-column {
+            flex: 0.95;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+            box-sizing: border-box;
+        }
+
+        .daemon-container {
+            flex: 0.05;
+            position: sticky;
+            top: 100px;
+            left: 0;
+            z-index: 1000;
+           
+        }
+
+        .daemon-column {
+            margin-top: 30px;
+            flex: 0.05;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+            box-sizing: border-box;
+        }
+
+        .daemon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-width: 0.25px;
+            border-color: #D9D9D9;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        #question-daemon{
+            background-color:#50D4BC ;
+
+        }
+
+        #feedback-daemon{
+            background-color: #EBA1EE;
+            opacity: 50%;
+        }
+
+        #encouragement-daemon{
+            background-color: #F18F01;
+            opacity: 50%;
+        }
+
+        #resource-daemon{
+            background-color: #20263B;
+            opacity: 50%;
+        }
+
+        .chat-message h1,
+        .chat-message h2,
+        .chat-message h3,
+        .chat-message h4,
+        .chat-message h5,
+        .chat-message h6 {
+            font-size: 1em; /* Adjust the size as needed */
+        }
+
+        .chat-message p {
+            font-size: 1em; /* Ensure paragraph text is the same size as headings */
+        }
+
+        .chat-message li{
+            font-size: 1em;
+        }
+
+        /* ... any other elements such as lists, blockquotes, etc. */
+
+
+ 
+
+        
+
+
+        .overview-container p {
+            font-family: 'League Spartan', sans-serif; /* Updated font family */
+            font-size: 20px; /* Updated font size */
+
+        }
+
+        .two-column {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Gap between columns */
+            margin-top: 75px; /* Adjusted margin top as per previous adjustments */
+            padding: 0; /* No padding for two-column, it should align with .container */
+
+        }
+
+        .two-column-main-step{
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 75px; /* Adjusted margin top as per previous adjustments */
+            padding: 0; /* No padding for two-column, it should align with .container */
+
+        }
+
+        .column-container h2 { /* Updated font size and margin for titles inside column */
+            font-size: 35px; 
+            margin-bottom: 6px; /* Added margin below the title */
+        }
+
+        .column-container h3 { /* Added margin below the subtitle */
+            margin-bottom: 12px;
+        }
+
+        .column-container p, .column-container input { /* Updated font family and font size for paragraph and input */
+            font-family: 'League Spartan', sans-serif;
+            font-size: 20px;
+        }
+
+        .column-container p { /* Added margin below the paragraph */
+            margin-bottom: 12px;
+        }
+
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+            box-sizing: border-box;
+        }
+
+        .column-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            border-radius: 8px;
+            padding: 40px 20px;
+            position: relative;
+            box-shadow: 4px 4px 0px 0px #50D4BC; /* Adjust as needed */
+            border: 2px solid #000;
+
+
+
+        }
+
+        .column-container textarea {
+            display: flex;
+            width: 100%; /* Adjust width as per your requirement */
+            padding: 10px 20px;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 40px; /* Adjust minimum height as per your requirement */
+            resize: vertical; /* Allow user to resize the textarea vertically only */
+            border-radius: 12px;
+            border: 1px solid #D9D9D9;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            font-family: 'League Spartan', sans-serif; /* Use the same font family as the rest of the page */
+            font-size: 14px;
+        }
+
+
+        .container, .two-column {
+            width: 100%;
+            max-width: 1128px; /* Ensures that container and two-column have the same width */
+            margin: 20px auto; /* Centers the container */
+            box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+            
+        }
+        
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .help-button, .only-save-button {
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .save-button{
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #E278D1;
+        }
+
+        .back-button{
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            margin-top: 20px;
+
+        }
+
+
+        .submit-button{
+            padding: 6.09px 12.017px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18.026px;
+            border: 1.205px solid #000;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #E278D1;
+
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between; /* This separates the buttons */
+        }
+
+        .button-group-left,
+        .button-group-right{
+            display: flex;
+            gap:10px;
+        }
+
+        .help-section{
+            margin-top: 10px;
+        }
+        .button-group .help-button,
+        .button-group .only-save-button {
+            margin-right: 10px; /* Add some spacing between these two buttons */
+        }
+
+        .button-group-left, .button-group-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .next-button, .submit-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        /*step content */
+
+        /* Initially hide all steps except the first one */
+        #step2-container,
+        #step3-container,
+        #step4-container,
+        #step5-container,
+        #step6-container {
+            display: none;
+        }
+
+        .step-content {
+            margin-top: 10px;
+        }
+
+        .step-content .task-list {
+            list-style: none; /* Removes the default bullets of the list */
+            padding: 0; /* Removes the default padding of the list */
+        }
+
+        .step-content .task-item {
+            margin-bottom: 20px; /* Adds space between list items */
+        }
+
+        .step-content textarea {
+            display: flex;
+            width: 100%; /* Adjust width as per your requirement */
+            padding: 10px 20px;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 100px; /* Adjust minimum height as per your requirement */
+            resize: vertical; /* Allow user to resize the textarea vertically only */
+            border-radius: 12px;
+            border: 1px solid #D9D9D9;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            font-family: 'League Spartan', sans-serif; /* Use the same font family as the rest of the page */
+            font-size: 14px;
+        }
+
+
+
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+
+        }
+
+        .file-upload-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+            cursor: pointer;
+            background-color: #f5f5f5; /* Light gray background */
+            font-family: "League Spartan", sans-serif;
+        }
+
+        .file-upload-container:hover {
+            background-color: #eaeaea; /* Slightly darker gray on hover */
+        }
+
+        .upload-icon {
+            margin-right: 10px;
+            margin-left: 5px;
+        }
+
+        .file-name {
+            flex-grow: 1; /* Allows the text to take up the remaining width */
+            color: #777;  /* Slightly darker text */
+        }
+
+        .icon{
+            width: 25px;
+        }
+
+
+        .custom-navbar {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0; /* Explicitly set to make sure navbar starts at the very left */
+            width: 100%;
+            background-color: #20263B;
+            z-index: 1000;
+
+            }
+
+            .custom-navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-family: 'League Spartan', sans-serif;
+
+            }
+
+            .custom-navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            }
+
+        @media (max-width: 768px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+
+
+        .help-section {
+            margin-top: 20px;
+        }
+
+        .help-text {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        .ai-response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #D9D9D9;
+            border-radius: 12px;
+        }
+
+        /* Add this CSS to your styles, adjust the width as needed */
+        .popover-body {
+            max-width: 800px; /* or any other width */
+            }
+
+
+
+        /* modal css*/
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            top: 0;
+            left: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black with a bit of transparency */
+            z-index: 1000; /* Sit on top */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 300px; /* Adjust to your preference */
+            height: 300px; /* Make height equal to width */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+
+        .modal-content img {
+            width: 100px; /* Or whatever size you want */
+            height: auto; /* Maintain aspect ratio */
+            margin: 20px 0;
+        }
+
+        #nextBtn {
+            padding: 10px 20px;
+            width: 190px;
+            color: #000;
+            border: 2.475px solid #000;
+            border-radius: 37.019px;
+            background: var(--base-white, #FFF);
+            cursor: pointer;
+        }
+
+        #nextBtn:hover {
+            background-color: #45a049;
+        }
+
+        .loader {
+            display: none; /* Initially hide loader */
+        }
+
+        .is-loading {
+            display: inline-block; /* Display the loader */
+            width: 16px; /* Or any size you want */
+            height: 16px; /* Or any size you want */
+            border: 2px solid #D9D9D9;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+    </style>
+ 
+</head>
+
+<body>
+    <div class="custom-navbar">
+        <a href="/homepage">Home</a>
+        <a href="/tutorial">Tutorial</a>
+        <a href="https://discord.gg/768meBBHJJ">Discord</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="title-container">
+        <h1>{{ project_template.title }}</h1>
+        <p> To get started, read sections 1-3. Then briefly write a problem statement and then begin Step 1. </p>
+    </div>
+
+    <div class="container overview-container">
+        <h2>1. Company Overview</h2>
+        <p>{{ project_template.companyOverview|markdown|safe}}</p>
+    </div>
+    
+    <div class="two-column columns-container">
+        <div class="column">
+            <div class="container column-container">
+                <h2>2. Objective</h2> <!-- Updated to h2 -->
+                <p>{{ project_template.objective|markdown|safe }}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="container column-container">
+                <h2>3. Problem Statement</h2> <!-- Updated to h2 -->
+                <p>Use the information provided about the company and objective and draft a short problem statement</p>
+                {% if user_problem_statement %}
+                    <textarea id="problem-statement-input" placeholder="Write your Problem Statement here">{{ user_problem_statement }}</textarea>
+                {% else %}
+                    <textarea id="problem-statement-input" placeholder="Write your Problem Statement here"></textarea>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="two-column columns-container">
+        <!-- Daemon buttons with Bootstrap 5 data attributes for popover -->
+        <div class="daemon-column">
+            <button type="button" class="daemon btn btn-secondary" id="question-daemon" data-bs-toggle="popover"  data-bs-html="true" data-bs-placement="right">
+                <img class="icon" src="https://prospero0.s3.us-east-2.amazonaws.com/noun-question-869753.svg">
+            </button>
+            <button type="button" class="daemon btn btn-secondary" id="feedback-daemon" data-bs-toggle="popover" data-bs-placement="right" title="Feedback" data-bs-content="Coming Soon!">
+                <img class="icon" src="https://prospero0.s3.us-east-2.amazonaws.com/noun-sparkle-6216457.svg">
+            </button>
+            <button type="button" class="daemon btn btn-secondary" id="encouragement-daemon" data-bs-toggle="popover" data-bs-placement="right" title="Encouragement" data-bs-content="Coming Soon!">
+                <img class="icon" src="https://prospero0.s3.us-east-2.amazonaws.com/noun-motivation-3918450.svg">
+            </button>
+            <button type="button" class="daemon btn btn-secondary" id="resource-daemon" data-bs-toggle="popover" data-bs-placement="right" title="Useful Resources" data-bs-content="Coming Soon!">
+                <img class="icon" src="https://prospero0.s3.us-east-2.amazonaws.com/noun-book-1183858.svg">
+            </button>
+
+        </div>
+          
+        <div class="step-column">
+            <form id="taskForm">
+                <input type="hidden" id="project-id" value="{{ project_id }}">
+                <input type="hidden" id="project-template-id" value="{{ project_template_id }}">
+
+                {% for step in project_template.steps %}
+                <div class="container step-container" id="step{{ loop.index }}-container">
+                    <h3>Step {{ loop.index }}: {{ step.title }}</h3>
+                    <h4>{{ step.description|markdown|safe }}</h4>
+                    <div class="step-content">
+                        <ul class="task-list">
+                            {% for task in step.tasks %}
+                            <li class="task-item" data-task-id="{{ task.id }}" data-inputType="{{ task.input_type }}">
+                                <p><b>Task {{ loop.index }}:</b> {{ task.description|markdown|safe }}</p>
+                                {% if task.input_type == "file" %}
+                                <div class="file-upload-wrapper">
+                                    {% set task_data = user_tasks.get(task.id, None) %}
+                                    <input type="file" name="taskFile{{ task.id }}" id="taskFile{{ task.id }}" accept=".png,.jpg,.jpeg,.svg,.pdf" style="display:none;" {% if task_data %} data-uploaded="true" {% endif %}>
+                                    <label for="taskFile{{ task.id }}" class="file-upload-container">
+                                        {% if task_data %}
+                                        <span class="upload-icon">✅</span>
+                                        <span class="file-name">{{ task_data }}</span>
+                                        {% else %}
+                                        <span class="upload-icon">📤</span>
+                                        <span class="file-name">Click to upload (accepted: .png, .jpg, .jpeg, .svg, .pdf)</span>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% else %}
+                                <textarea name="taskInput{{ task.id }}" placeholder="Paste for Task {{ loop.index }} here.">{{ user_tasks.get(task.id, '') }}</textarea>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+            
+                    <div class="button-group">
+                        <div class="button-group-left">
+                            <button type="button" class="only-save-button">Save</button>
+                        </div>
+            
+                        <div class="button-group-right">
+                            {% if not loop.first %}
+                            <button type="button" class="back-button">Back</button>
+                            {% endif %}
+            
+                            {% if loop.last %}
+                            <button type="button" class="submit-button">
+                                <span class="loader"></span>Submit
+                            </button>
+                                
+                            {% else %}
+                            <button type="button" class="save-button">Next Step</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="help-section" style="display: none;">
+                        <textarea class="help-text" placeholder="Type your question here"></textarea>
+                        <div class="ai-response"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+
+
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalText">Nice work!</h3>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <div id="finalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="document.getElementById('finalModal').style.display='none'">&times;</span>
+                <h2>Ayo you're awesome!</h2>
+            </div>
+            <div class="modal-body">
+                <p>Congrats, you did it!</p>
+            </div>
+            <div class="modal-footer">
+                <button>
+                    <a href="{{ url_for('case_study', project_id=user_project.id) }}">View Results</a>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS includes Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.0/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+    <script src="/static/js/project.js"></script>
+
+    <script src="/static/js/chat-popovers.js"></script>
+
+    <script>
+        // This script targets only buttons with the 'daemon' class within 'daemon-column'
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('.daemon-column .daemon[data-bs-toggle="popover"]'));
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl, {
+                container: 'body' // Specifying 'body' to ensure popovers are not confined by any parent element's boundaries
+            });
+        });
+    </script>
+    
+
+
+
+</body>
+
+</html>

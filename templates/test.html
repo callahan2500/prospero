@@ -23,7 +23,7 @@
 
     h1 {
         color: #000;
-        font-size: 48px;
+        font-size: 32px;
         font-weight: 500;
         text-align: center;
         text-align: left; /* Adjusted */
@@ -43,17 +43,17 @@
         gap: 20px;
     }
     .left-column {
-        flex: 0.75; /* Takes up 1 portion of the available space */
+        flex: 1; /* Takes up 1 portion of the available space */
     }
     .right-column {
         flex: 2; /* Takes up 2 portions of the available space, making it twice as wide as the left column */
-        padding: 0;
-        box-sizing: border-box;
+        justify-content: left;
     }
 
     .container{
-        margin: 20px;
+        margin: 20px auto;
         padding: 40px 20px;
+        box-sizing: border-box;
         border-radius: 12px;
         border: 2px solid #000;
         background: #FFF;
@@ -93,28 +93,11 @@
         gap:1px;
     }
 
-    .container textarea {
-            display: flex;
-            width: 100%; /* Adjust width as per your requirement */
-            padding: 10px 20px;
-            align-items: flex-start;
-            gap: 10px;
-            min-height: 40px; /* Adjust minimum height as per your requirement */
-            resize: vertical; /* Allow user to resize the textarea vertically only */
-            border-radius: 12px;
-            border: 1px solid #D9D9D9;
-            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
-            font-family: 'League Spartan', sans-serif; /* Use the same font family as the rest of the page */
-            font-size: 14px;
-        }
-
     
     /*step content */
 
     .container.step-container {
         box-shadow: 4px 4px 0px 0px #50D4BC; /* Adjust as needed */
-        width: 100%;
-        margin-right: 20px;
     }
 
     /* Initially hide all steps except the first one */
@@ -441,14 +424,6 @@
                 flex-direction: column;
             }
         }
-
-        @media screen and (min-width:1401px) {
-            .container.step-container {
-                max-width: none;
-            }
-            
-        }
-
     
 
 
@@ -473,17 +448,17 @@
         <div class="container">
             <h2>Progress</h2>
             {% if user_project.most_current_step == 'Empathize' or user_project.most_current_step == 'Empathsize'%}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-empathize.svg">
+                <img>
             {% elif user_project.most_current_step == 'Define' %}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-define.svg">
+                <img>
             {% elif user_project.most_current_step == 'Ideate' %}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-ideate.svg">
+                <img>
             {% elif user_project.most_current_step == 'Prototype' %}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-prototype.svg">
+                <img>
             {% elif user_project.most_current_step == 'Test' %}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-test.svg"> 
+                <img> 
             {% elif user_project.most_current_step == 'Case Study' %}
-                <img src="https://prospero0.s3.us-east-2.amazonaws.com/progress-tracker-casestudy.svg">    
+                <img>    
             {% endif %}
             
         </div>
@@ -532,8 +507,7 @@
             <div class="container step-container" id="step{{ loop.index }}-container">
                 <div class="step-title-group">
                     <div class="title-left">
-                        <h2>Step {{ loop.index }}: {{ step.title }}</h2>
-                        <h4>{{ step.description|markdown|safe }}</h4>
+                        <h3>Step {{ loop.index }}: {{ step.title }}</h3>
                     </div>
                     <div class="daemon-column">
                         <button type="button" class="daemon btn btn-secondary" id="question-daemon" data-bs-toggle="popover"  data-bs-html="true" data-bs-placement="right">
@@ -542,6 +516,8 @@
                     </div>
 
                 </div>
+                
+                <h4>{{ step.description|markdown|safe }}</h4>
                 <div class="step-content">
                     <ul class="task-list">
                         {% for task in step.tasks %}
@@ -598,6 +574,7 @@
             {% endfor %}
         </form>
     </div>
+
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <h3 id="modalText">Nice work!</h3>

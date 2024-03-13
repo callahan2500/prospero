@@ -75,14 +75,18 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
-    last_page = db.Column(db.String(150), nullable=True)  # To store last page user was on
+    is_active = db.Column(db.Boolean, default =True, nullable=False)
 
 class ProjectTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     companyOverview = db.Column(db.String(1500))
     objective = db.Column(db.String(1500))
-    steps = db.relationship('StepTemplate', back_populates='project_template', lazy=True)
+    coverImage = db.Column(db.String(1500), default='https://prospero0.s3.us-east-2.amazonaws.com/new_default_image_gallery_cards.svg')
+    industry = db.Column(db.String(500))
+    difficulty = db.Column(db.String(150))
+    client = db.Column(db.String(1500))
+    steps = db.relationship('StepTemplate', order_by='StepTemplate.id', back_populates='project_template', lazy=True)
 
 class StepTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -108,6 +112,18 @@ class Project(db.Model):
     tasks = db.relationship('Task', backref='project', lazy=True)
     problem_statement = db.Column(db.Text, nullable=True)
     is_public = db.Column(db.Boolean, default=False, nullable=False)
+    most_current_step_id = db.Column(db.Integer, default=1)
+    most_current_step = db.Column(db.String(150), default='Empathize')
+    @property
+    def completionRate(self):
+        total_tasks = TaskTemplate.query.join(StepTemplate).join(ProjectTemplate).filter(ProjectTemplate.id == self.template_id).count()
+        user_tasks = Task.query.filter_by(project_id=self.id).count()
+
+        if total_tasks > 0:
+            return round((user_tasks/ total_tasks)*100)
+        else:
+            return 0
+    
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -136,6 +152,29 @@ class UserView(ModelView):
 
 class ProjectTemplateView(ModelView):
     column_display_pk = True  # Display primary key in the list view
+    industry_choices = [
+        ('web3', 'Web3'),
+        ('ai', 'AI'),
+        ('healthtech', 'Healthtech'),
+        ('edtech', 'Edtech')
+    ]
+
+    difficulty_choices = [
+        ('easy', 'Easy'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced')
+    ]
+
+    form_choices = {
+        'industry': industry_choices,
+        'difficulty': difficulty_choices,
+    }
+
+class ProjectView(ModelView):
+    column_display_pk = True
+    column_auto_select_related = True  # Automatically join and display related fields in the list view
+    column_list = ['id', 'user_id', 'template_id', 'problem_statement', 'is_public','step_completion_rate', 'completionRate', 'most_current_step_id', 'most_current_step']
+
 
 class StepTemplateView(ModelView):
     column_display_pk = True
@@ -145,6 +184,18 @@ class StepTemplateView(ModelView):
             'fields': ['title'],
             'page_size': 10
         }
+    }
+
+    title_choices = [
+        ('Empathize', 'Empathize'),
+        ('Define', 'Define'),
+        ('Ideate', 'Ideate'),
+        ('Prototype','Prototype'),
+        ('Test','Test')
+    ]
+
+    form_choices = {
+        'title': title_choices
     }
 
 class TaskTemplateView(ModelView):
@@ -157,11 +208,48 @@ class TaskTemplateView(ModelView):
         }
     }
 
+    input_type_choices = [
+        ('text','text'),
+        ('file', 'file')
+    ]
+
+    case_study_endpoint_choices = [
+        ('figma_file', 'figma_file'),
+        ('google_folder', 'google_folder'),
+        ('stakeholder_interview', 'stakeholder_interview'),
+        ('research_plan', 'research_plan'),
+        ('user_interviews', 'user_interviews'),
+        ('secondary_research','secondary_research'),
+        ('competitive_research', 'competitive_research'),
+        ('empathy_map', 'empathy_map'),
+        ('affinity_map', 'affinity_map'),
+        ('research_insights', 'research_insights'),
+        ('revised_problem_statement', 'revised_problem_statement'),
+        ('brainstorm', 'brainstorm'),
+        ('user_flow', 'user_flow'),
+        ('mood_board','mood_board'),
+        ('style_guide', 'style_guide'),
+        ('lofi_wireframes', 'lofi_wireframes'),
+        ('designs', 'designs'),
+        ('prototype', 'prototype'),
+        ('user_testing', 'user_testing'),
+        ('test_findings', 'test_findings'),
+        ('reflections', 'reflections')
+    ]
+
+    form_choices = {
+        'input_type': input_type_choices,
+        'case_study_endpoint': case_study_endpoint_choices
+    }
+
+
+
 
 def init_cms(app):
     admin = Admin(app, name='CMS', template_mode='bootstrap3')
     admin.add_view(UserView(User, db.session))
     admin.add_view(ProjectTemplateView(ProjectTemplate, db.session))
+    admin.add_view(ProjectView(Project, db.session))
     admin.add_view(StepTemplateView(StepTemplate, db.session))
     admin.add_view(TaskTemplateView(TaskTemplate, db.session))
 
@@ -198,17 +286,19 @@ def logout():
 def index():
     if current_user.is_authenticated:
         # If user is already logged in, redirect to projects page
-        return redirect(url_for('projects'))
+        return redirect(url_for('homepage'))
 
     # Handle login logic here
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
+        if user and check_password_hash(user.password, password):
+            if user.is_active:
                 login_user(user)
-                return redirect(url_for('projects'))
+                return redirect(url_for('homepage'))
+            else:
+                flash("Your account has been deactivated. To reactivate, please contact support@sprintfolio.com.")
     return render_template("index.html")  # Login page
 
 @app.route("/tutorial")
@@ -220,6 +310,48 @@ def tutorial():
 def projects():
     all_projects = ProjectTemplate.query.all()
     return render_template("projects.html", projects=all_projects)
+
+
+@app.route("/homepage", methods=['GET', 'POST'])
+@login_required
+def homepage():
+    # Fetch user-specific projects to filter into "Active", "Completed", and determine "Not Started"
+    user_projects = Project.query.filter_by(user_id=current_user.id).all()
+
+    # Get IDs of templates for active and completed projects
+    user_project_template_ids = [project.template_id for project in user_projects]
+
+    # Fetch all project templates excluding the ones the user has started or completed
+    all_project_templates = ProjectTemplate.query.filter(ProjectTemplate.id.notin_(user_project_template_ids)).all()
+
+    # Initialize containers for active and completed projects data
+    active_projects = []
+    completed_projects = []
+
+    # Process each user project for categorization and detail enrichment
+    for user_project in user_projects:
+        # Fetch the corresponding project template
+        project_template = ProjectTemplate.query.get(user_project.template_id)
+        if project_template:
+            project_data = {
+                'id': project_template.id,
+                'project_id': user_project.id,
+                'title': project_template.title,
+                'coverImage': project_template.coverImage,
+                'client': project_template.client,
+                'objective': project_template.objective,
+                'industry': project_template.industry,
+                'difficulty': project_template.difficulty,
+                'completionRate': user_project.completionRate,  # Assuming this computes correctly
+            }
+            # Categorize into active or completed
+            if user_project.is_public:
+                completed_projects.append(project_data)
+            else:
+                active_projects.append(project_data)
+
+    # Pass the filtered list of project templates, active projects, and completed projects to the template
+    return render_template('homepage.html', all_projects=all_project_templates, active_projects=active_projects, completed_projects=completed_projects)
 
 def wait_on_run(run, thread):
     while run.status == "queued" or run.status == "in_progress":
@@ -337,7 +469,6 @@ def ask():
     else:
         return jsonify({"error": "No assistant message found"}), 404
 
-
 @app.route('/submit_tasks', methods=['POST'])
 @login_required
 def submit_tasks():
@@ -361,9 +492,6 @@ def submit_tasks():
     #Problem Statement
     problem_statement = request.form.get('problem_statement')
     
-    #print(f"Extracted task IDs: {task_ids}")
-    #print(problem_statement)
-
     if problem_statement and problem_statement != user_project.problem_statement:
         user_project.problem_statement = problem_statement
 
@@ -418,6 +546,27 @@ def submit_tasks():
                     #print(f"Creating new file task with ID {task_id} and link {link}")
                     new_task = Task(link=link, project_id=user_project.id, template_id=task_id)
                     db.session.add(new_task)
+    
+    selected_task_id = next(iter(task_ids))
+    selected_task_template = TaskTemplate.query.get(selected_task_id)
+    current_step_template = StepTemplate.query.get(selected_task_template.step_template_id)
+
+    #Here we update the most current step a user is on. For the last step, we set to Case Study.
+    if current_step_template.title == 'Test':
+        user_project.most_current_step_id = current_step_template.id
+        user_project.most_current_step = 'Case Study'
+        db.session.add(user_project)  
+    else:
+        selected_step_template = StepTemplate.query.get((selected_task_template.step_template_id + 1)) #we want the NEXT Step since the user is going to the next stage.
+
+        #this allows for the user to go back without affecting the tracker.
+        if selected_step_template.id > user_project.most_current_step_id:
+            user_project.most_current_step_id = selected_step_template.id
+            user_project.most_current_step = selected_step_template.title
+            db.session.add(user_project)  
+        else:
+            pass 
+
 
     try:
         db.session.commit()
@@ -510,8 +659,6 @@ def make_project_public():
     return jsonify(success=True)
 
 
-
-
 @app.template_filter('markdown')
 def markdown_to_html(text):
     return markdown(text, extensions=['fenced_code', 'tables'])
@@ -519,11 +666,15 @@ def markdown_to_html(text):
 #This adds a filter to enable markdown. 
 app.jinja_env.filters['markdown'] = markdown_to_html
 
-#This function loads projects into the dropdown on /project
-@app.route("/load_project", methods=['POST'])
+@app.route("/load_project", methods=['GET', 'POST'])
 @login_required
 def load_project():
-    project_id = request.form.get('project')
+    if request.method == 'POST':
+        project_id = request.form.get('project')
+        print(project_id)
+    else:  # For GET requests
+        project_id = request.args.get('project')
+        print(project_id)
     return redirect(url_for('project', project_template_id=project_id))
 
 
@@ -531,6 +682,8 @@ def load_project():
 @login_required
 def project(project_template_id):
     project_template = ProjectTemplate.query.get_or_404(project_template_id)
+
+    print(project_template)
 
     # Fetch the user's projects and tasks for this specific project template
     user_project = Project.query.filter_by(user_id=current_user.id, template_id=project_template_id).first()
@@ -547,7 +700,7 @@ def project(project_template_id):
     # Debugging print statements
     #print(f"User ID: {current_user.id}, Project Template ID: {project_template_id}")
     #print("User Project:", user_project)
-    #print("User Tasks:", user_tasks)
+    print("User Tasks:", user_tasks)
     project_id = user_project.id
 
     user_problem_statement = user_project.problem_statement if user_project else None
